@@ -2,16 +2,14 @@
 @author Josh Braden
 Header file for the virtual machine.
 */
-//Functions
-int startMachine(int argStatus, **filename);
-struct narcVM initMachine(struct narcVM vm);
-int execProg(struct narcVM vm, char* filename)
+//Inclusions for this file
+#include <stdio.h>
 //Structs
 struct narcVM {
     FILE* console;
     unsigned short mem[65536];
     unsigned short reg_acc;
-    unsigned short reg_memBuff
+    unsigned short reg_memBuff;
     unsigned short reg_instruction;
     unsigned short reg_memAddress;
     unsigned short reg_programCounter;
@@ -20,3 +18,7 @@ struct narcVM {
     unsigned short reg_index3;
     unsigned short reg_processorStatus;
 };
+//Functions
+int startMachine(int argStatus, char *filename);
+struct narcVM initMachine(struct narcVM vm);
+int openProg(struct narcVM vm, char *filename);

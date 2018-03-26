@@ -9,7 +9,7 @@ Main file, handles args and calls functions
 int main(int argc, char *argv[]) {
 	char *filename;
 	int argStatus, runStatus;
-	argStatus = argHandler(int argc, char *argv[], &filename);
+	argStatus = argHandler(argc, argv, &filename);
 	if (argStatus == 2) {
 		return 0;
 	}
@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 	return 0;
 }
 int argHandler(int argc, char *argv[], char **filename) {
-	int i, cmpVal;
+	int i;
 	//No args, drop to interactive mode
 	if (argc == 1) {
 		return 0;
@@ -36,7 +36,7 @@ int argHandler(int argc, char *argv[], char **filename) {
 			}
 			//If not a flag, assume it's a filename
 			else {
-				strcpy(filename, argv[i]);
+				strcpy(*filename, argv[i]);
 				return 2;
 			}
 			//TODO other args
