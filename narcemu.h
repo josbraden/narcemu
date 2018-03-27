@@ -8,7 +8,6 @@ struct argStruct {
 	char filename[4352];
 	int helpFlag;
 	int runMode;
-	int memMode;
 };
 //Function declarations
 //In file main.c

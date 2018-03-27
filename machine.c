@@ -24,7 +24,7 @@ int startMachine(struct argStruct args) {
         while (1) {
         	//Get filename from user, use "quit" and "exit" as escape patterns
         	fprintf(vm.console, ">>> ");
-            fscanf(stdin, "%s", input);
+            fscanf(vm.input, "%s", input);
             //If help command is encountered
             if (strcmp(input, "help") == 0 || strcmp(input, "?") == 0) {
 				//Print interactive mode help text
@@ -35,9 +35,12 @@ int startMachine(struct argStruct args) {
             }
             else {
     	        //Execute program inputted by user
-    	        vmStatus = openProg(vm, input, args.memMode);
+    	        vmStatus = openProg(vm, input);
     	        if (vmStatus == 1) {
-					fprintf(console, "Input file not found!\n");
+					fprintf(vm.console, "Input file not found!\n");
+    	        }
+    	        else if (vmStatus == 2) {
+					fprintf(vm.console, "Out of memory\n");
     	        }
 	            strcpy(input, "");
             }
@@ -45,14 +48,14 @@ int startMachine(struct argStruct args) {
     }
     //Not interactive mode, execute file from the args and exit
     else {
-        vmStatus = openProg(vm, args.filename, args.memMode);
+        vmStatus = openProg(vm, args.filename);
         if (vmStatus == 1) {
-			fprintf(console, "Input file not found!\n");
+			fprintf(vm.console, "Input file not found!\n");
         }
     }
     return vmStatus;
 }
-//Function to initilize a VM: set registers to 0, wipe memory, set console file
+//Function to initilize a VM: set registers to 0, wipe memory, set IO device pointers
 struct narcVM initMachine(struct narcVM vm) {
     int i;
     //Init registers
@@ -65,16 +68,19 @@ struct narcVM initMachine(struct narcVM vm) {
     vm.reg_index2 = 0;
     vm.reg_index3 = 0;
     vm.reg_processorStatus = 0;
-    //Set console file pointer
+    //Set I/O file pointers
     vm.console = stdout;
+    vm.input = stdin;
     //wipe memory
     for (i = 0; i < 65536; i++) {
         vm.mem[i] = 0;
     }
+    //Set extra values
+    vm.pendingInstr = 0;
 	return vm;
 }
 //Function that executes a program using the passed vm and filename
-int openProg(struct narcVM vm, char filename[4352], int memMode) {
+int openProg(struct narcVM vm, char filename[4352]) {
 	//Local data
 	FILE *infile;
 	//Open file
@@ -83,15 +89,37 @@ int openProg(struct narcVM vm, char filename[4352], int memMode) {
 		//Return file not found error code
 		return 1;
 	}
-	//If we're running in static mode, need to load program into memory before execution
-	if (memMode == 1) {
-
+	//Load program into vm RAM and close file
+	vm = loadProg(vm, infile);
+	fclose(infile);
+	if (vm.pendingInstr >= 65536) {
+		//Return out of memory error
+		return 2;
 	}
-	//else run directly off disk
-	else {
+	//TODO execute the program
 
-	}
     //Normal exit status
     return 0;
 }
-//Executes a program from memory
+//Loads a program from disk into the VM's memory
+//Reads a short, swaps the bytes (big endian), puts that data into vm RAM
+struct narcVM loadProg(struct narcVM vm, FILE* infile) {
+	int i;
+	unsigned short readBuf, byteSwap;
+	i = 0;
+	while (fread(&readBuf, 1, 2, infile) == 2) {
+		if (i >= 65536) {
+			//Out of memory
+			break;
+		}
+		byteSwap = (readBuf >> 8) | (readBuf << 8);
+		vm.mem[i] = byteSwap;
+		i++;
+	}
+	vm.pendingInstr = i;
+	return vm;
+}
+//Executes a program stored in the VM's RAM
+void execProg(struct narcVM vm) {
+
+}

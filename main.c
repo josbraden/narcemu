@@ -26,7 +26,6 @@ int main(int argc, char *argv[]) {
 }
 struct argStruct argHandler(int argc, char *argv[], struct argStruct args) {
 	int i;
-	args.memMode = 0;
 	//No args, drop to interactive mode
 	if (argc == 1) {
 		args.runMode = 0;
@@ -38,10 +37,6 @@ struct argStruct argHandler(int argc, char *argv[], struct argStruct args) {
 				//print help
 				args.helpFlag = 1;
 				return args;
-			}
-			//Static running mode
-			else if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--static") == 0) {
-				args.memMode = 1;
 			}
 			//TODO other args
 			//If not a flag, assume it's a filename
