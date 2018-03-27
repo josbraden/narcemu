@@ -19,6 +19,6 @@ struct narcVM {
     unsigned short reg_processorStatus;
 };
 //Functions
-int startMachine(int argStatus, char *filename);
+int startMachine(struct argStruct args);
 struct narcVM initMachine(struct narcVM vm);
-int openProg(struct narcVM vm, char *filename);
+int openProg(struct narcVM vm, char filename[4352], int memMode);

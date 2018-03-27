@@ -3,6 +3,13 @@
 
 Written for COSC 3327
 */
+//Structs
+struct argStruct {
+	char filename[4352];
+	int helpFlag;
+	int runMode;
+	int memMode;
+};
 //Function declarations
 //In file main.c
-int argHandler(int argc, char *argv[], char **filename);
+struct argStruct argHandler(int argc, char *argv[], struct argStruct args);

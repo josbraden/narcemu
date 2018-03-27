@@ -5,41 +5,51 @@ Main file, handles args and calls functions
 */
 #include "narcemu.h"
 #include "machine.h"
+#include <stdio.h>
 #include <string.h>
 int main(int argc, char *argv[]) {
-	char *filename;
-	int argStatus, runStatus;
-	argStatus = argHandler(argc, argv, &filename);
-	if (argStatus == 2) {
+	//Local data
+	struct argStruct args;
+	int runStatus;
+	args = argHandler(argc, argv, args);
+	//If help called, don't continue
+	if (args.helpFlag == 1) {
 		return 0;
 	}
-	runStatus = startMachine(argStatus, &filename);
+	//Start machine
+	runStatus = startMachine(args);
 	if (runStatus != 0) {
 		printf("VM exited with code: %d", runStatus);
 	}
 
 	return 0;
 }
-int argHandler(int argc, char *argv[], char **filename) {
+struct argStruct argHandler(int argc, char *argv[], struct argStruct args) {
 	int i;
+	args.memMode = 0;
 	//No args, drop to interactive mode
 	if (argc == 1) {
-		return 0;
+		args.runMode = 0;
 	}
 	else {
 		for (i = 1; i <= argc; i++) {
 			//Helptext flag
 			if (strcmp(argv[i], "-h") == 0) {
 				//print help
-				filename = NULL;
-				return 1;
+				args.helpFlag = 1;
+				return args;
 			}
-			//If not a flag, assume it's a filename
-			else {
-				strcpy(*filename, argv[i]);
-				return 2;
+			//Static running mode
+			else if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--static") == 0) {
+				args.memMode = 1;
 			}
 			//TODO other args
+			//If not a flag, assume it's a filename
+			else {
+				strcpy(args.filename, argv[i]);
+				args.runMode = 1;
+			}
 		}
 	}
+	return args;
 }
