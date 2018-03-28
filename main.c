@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 	//Start machine
-	runStatus = startMachine(args);
+	runStatus = startMachine(args.runMode, args.filename);
 	if (runStatus != 0) {
 		printf("VM exited with code: %d", runStatus);
 	}

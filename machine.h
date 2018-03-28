@@ -26,7 +26,7 @@ struct narcVM {
     int pendingInstr;
 };
 //Functions
-int startMachine(struct argStruct args);
+int startMachine(int runMode, char filename[4352]);
 struct narcVM initMachine(struct narcVM vm);
 int openProg(struct narcVM vm, char filename[4352]);
 struct narcVM loadProg(struct narcVM vm, FILE* infile);

@@ -8,7 +8,7 @@ File for main virtual machine handling funtctions
 #include <stdio.h>
 #include <string.h>
 //Function to initilize virtual machine and start either interactive or execute a filename
-int startMachine(struct argStruct args) {
+int startMachine(int runMode, char filename[4352]) {
     //Local data
     struct narcVM vm;
     char input[4352];
@@ -17,7 +17,7 @@ int startMachine(struct argStruct args) {
     vm = initMachine(vm);
     vmStatus = 0;
     //Continue
-    if (args.runMode == 0) {
+    if (runMode == 0) {
         //Drop to interactive mode
         fprintf(vm.console, "No file entered, dropping to interactive mode.\n");
         strcpy(input, "");
@@ -48,7 +48,7 @@ int startMachine(struct argStruct args) {
     }
     //Not interactive mode, execute file from the args and exit
     else {
-        vmStatus = openProg(vm, args.filename);
+        vmStatus = openProg(vm, filename);
         if (vmStatus == 1) {
 			fprintf(vm.console, "Input file not found!\n");
         }
