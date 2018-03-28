@@ -30,4 +30,4 @@ int startMachine(int runMode, char filename[4352]);
 struct narcVM initMachine(struct narcVM vm);
 int openProg(struct narcVM vm, char filename[4352]);
 struct narcVM loadProg(struct narcVM vm, FILE* infile);
-void execProg(struct narcVM vm);
+int execProg(struct narcVM vm);

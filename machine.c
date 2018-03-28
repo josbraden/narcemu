@@ -120,6 +120,6 @@ struct narcVM loadProg(struct narcVM vm, FILE* infile) {
 	return vm;
 }
 //Executes a program stored in the VM's RAM
-void execProg(struct narcVM vm) {
-
+int execProg(struct narcVM vm) {
+	return 0;
 }
