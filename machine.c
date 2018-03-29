@@ -27,7 +27,7 @@ int startMachine(int runMode, char filename[4352]) {
             fscanf(vm.input, "%s", input);
             //If help command is encountered
             if (strcmp(input, "help") == 0 || strcmp(input, "?") == 0) {
-				//Print interactive mode help text
+				//TODO Print interactive mode help text
             }
             //If exit is encountered
             if (strcmp(input, "quit") == 0 || strcmp(input, "exit") == 0) {
@@ -76,13 +76,15 @@ struct narcVM initMachine(struct narcVM vm) {
         vm.mem[i] = 0;
     }
     //Set extra values
-    vm.pendingInstr = 0;
+    //vm.pendingInstr = 0;
 	return vm;
 }
 //Function that executes a program using the passed vm and filename
 int openProg(struct narcVM vm, char filename[4352]) {
 	//Local data
 	FILE *infile;
+	int i;
+	unsigned short readBuf, byteSwap;
 	//Open file
 	infile = fopen(filename, "rb");
 	if (infile == NULL) {
@@ -90,36 +92,23 @@ int openProg(struct narcVM vm, char filename[4352]) {
 		return 1;
 	}
 	//Load program into vm RAM and close file
-	vm = loadProg(vm, infile);
-	fclose(infile);
-	if (vm.pendingInstr >= 65536) {
-		//Return out of memory error
-		return 2;
-	}
-	//TODO execute the program
-
-    //Normal exit status
-    return 0;
-}
-//Loads a program from disk into the VM's memory
-//Reads a short, swaps the bytes (big endian), puts that data into vm RAM
-struct narcVM loadProg(struct narcVM vm, FILE* infile) {
-	int i;
-	unsigned short readBuf, byteSwap;
 	i = 0;
 	while (fread(&readBuf, 1, 2, infile) == 2) {
 		if (i >= 65536) {
-			//Out of memory
-			break;
+			//VM out of memory
+			return 2;
 		}
 		byteSwap = (readBuf >> 8) | (readBuf << 8);
 		vm.mem[i] = byteSwap;
 		i++;
 	}
-	vm.pendingInstr = i;
-	return vm;
+	fclose(infile);
+	//TODO execute the program
+
+    return 0;
 }
 //Executes a program stored in the VM's RAM
 int execProg(struct narcVM vm) {
+
 	return 0;
 }

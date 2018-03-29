@@ -23,11 +23,9 @@ struct narcVM {
     unsigned short reg_index3;
     unsigned short reg_processorStatus;
     //Extra values
-    int pendingInstr;
 };
 //Functions
 int startMachine(int runMode, char filename[4352]);
 struct narcVM initMachine(struct narcVM vm);
 int openProg(struct narcVM vm, char filename[4352]);
-struct narcVM loadProg(struct narcVM vm, FILE* infile);
 int execProg(struct narcVM vm);
