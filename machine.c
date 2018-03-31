@@ -22,16 +22,14 @@ int startMachine(int runMode, char filename[4352]) {
     //Continue
     if (runMode == 0) {
         //Drop to interactive mode
-        fprintf(vm.console, "No file entered, dropping to interactive mode.\n");
+        fprintf(vm.console, "No file entered, dropping to interactive mode.\nType 'help' for options.\n");
         strcpy(input, "");
         while (1) {
-        	//Get filename from user, use "quit" and "exit" as escape patterns
         	fprintf(vm.console, ">>> ");
             fscanf(vm.input, "%s", input);
             //If help command is encountered
             if (strcmp(input, "help") == 0 || strcmp(input, "?") == 0) {
-				//TODO Print interactive mode help text
-                fprintf(vm.console, "Dummy help text\n");
+                fprintf(vm.console, "Enter a relative or absolute filename to execute.\nType 'help' or '?' for this text.\nType 'quit' or 'exit' to terminate.\n");
             }
             //If exit is encountered
             if (strcmp(input, "quit") == 0 || strcmp(input, "exit") == 0) {
@@ -190,7 +188,7 @@ int execInstr(struct narcVM vm) {
             fscanf(vm.input, "%hu", &vm.reg_acc);
             break;
         case WWD:
-            fprintf(vm.console, "%hu", vm.reg_acc);
+            fprintf(vm.console, "%hu\n", vm.reg_acc);
             break;
         case SHL:
             vm.reg_acc = vm.reg_acc << 1;
@@ -198,8 +196,8 @@ int execInstr(struct narcVM vm) {
         case SHR:
             vm.reg_acc = vm.reg_acc >> 1;
             break;
+        //Index register instructions: need to resolve indirection if any and use mode as register selection
         case LDX:
-            //if indirect set, resolve indirection
             if (mode >=4 && mode <= 7) {
                 address = vm.mem[address];
             }

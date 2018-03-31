@@ -29,23 +29,25 @@ struct argStruct argHandler(int argc, char *argv[], struct argStruct args) {
 	//No args, drop to interactive mode
 	if (argc == 1) {
 		args.runMode = 0;
+		return args;
 	}
+	//Else process arguments
 	else {
 		for (i = 1; i < argc; i++) {
 			//Helptext flag
-			if (strcmp(argv[i], "-h") == 0) {
+			if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
 				//print help
-				printf("Dummy help text\n");
+				printf("Usage: narcemu [options]|[program name]\nExample: ./narcemu program.bin\n");
 				args.helpFlag = 1;
 				return args;
 			}
-			//TODO other args
-			//If not a flag, assume it's a filename
+			//If not a flag, use it as a filename
 			else {
 				strcpy(args.filename, argv[i]);
 				args.runMode = 1;
+				return args;
 			}
 		}
 	}
-	return args;
+	return args;	
 }
