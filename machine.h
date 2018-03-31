@@ -39,8 +39,6 @@ struct narcVM {
     unsigned short reg_index2;
     unsigned short reg_index3;
     unsigned short reg_processorStatus;
-    //Extra values
-    unsigned int instrKnt;
 };
 //Functions
 int startMachine(int runMode, char filename[4352]);

@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
 	//Start machine
 	runStatus = startMachine(args.runMode, args.filename);
 	if (runStatus != 0) {
-		printf("VM exited with code: %d", runStatus);
+		printf("VM exited with code: %d\n", runStatus);
 	}
 
 	return 0;
@@ -31,10 +31,11 @@ struct argStruct argHandler(int argc, char *argv[], struct argStruct args) {
 		args.runMode = 0;
 	}
 	else {
-		for (i = 1; i <= argc; i++) {
+		for (i = 1; i < argc; i++) {
 			//Helptext flag
 			if (strcmp(argv[i], "-h") == 0) {
 				//print help
+				printf("Dummy help text\n");
 				args.helpFlag = 1;
 				return args;
 			}

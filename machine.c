@@ -31,6 +31,7 @@ int startMachine(int runMode, char filename[4352]) {
             //If help command is encountered
             if (strcmp(input, "help") == 0 || strcmp(input, "?") == 0) {
 				//TODO Print interactive mode help text
+                fprintf(vm.console, "Dummy help text\n");
             }
             //If exit is encountered
             if (strcmp(input, "quit") == 0 || strcmp(input, "exit") == 0) {
@@ -78,8 +79,6 @@ struct narcVM initMachine(struct narcVM vm) {
     for (i = 0; i < 65536; i++) {
         vm.mem[i] = 0;
     }
-    //Set extra values
-    vm.instrKnt = 0;
 	return vm;
 }
 //Function that executes a program using the passed vm and filename
@@ -125,6 +124,7 @@ int execProg(struct narcVM vm) {
         instr = execInstr(vm);
         //Exit if told to halt
         if (instr == 0) {
+            fprintf(vm.console, "Execution completed.\n");
             return instr;
         }
         //Exit if illegal instruction
