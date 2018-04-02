@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
             }
         }
         //Call assembly function
-
+		assembler(input, output);
     }
 
     return 0;
