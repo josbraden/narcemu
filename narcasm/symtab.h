@@ -20,4 +20,6 @@ struct symTab {
 };
 //Functions
 struct symTab initSymTab(struct symTab);
-struct symTab installSym(struct symTab table);
+struct symTab installSym(struct symTab table, char name[16], int type, int value);
+struct symTab freeSymTab(struct symTab table);
+int lookupSym(struct symTab table, char name[16]);
