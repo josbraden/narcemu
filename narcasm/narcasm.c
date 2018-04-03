@@ -9,6 +9,8 @@ Main assembler file
 #include <string.h>
 int assembler(char input[4352], char output[4352]) {
 	//Local data
+	int progSize;
+	unsigned short memMode;
 	FILE *ofile;
 	FILE *ifile;
 	struct symTab table;
@@ -26,19 +28,27 @@ int assembler(char input[4352], char output[4352]) {
 	}
 	//Set yyin to the correct file stream
 	yyin = ifile;
-	//Perform first pass
+	//init table and do first pass, determine indexing mode
+	table = initSymTab(table);
 	table = firstPass(table);
-	//Close files before exit
+	progSize = totalMem();
+	yyrestart(ifile);
+	if (progSize > 265) {
+		memMode = 4;
+	}
+	else {
+		memMode = 0;
+	}
+	//Second pass
+	//Close files and exit
 	fclose(ifile);
 	fclose(ofile);
-
 	return 0;
 }
 //First pass function: creates symbol table, as well as getting the size of the assembly program.
 struct symTab firstPass(struct symTab table) {
 	int token;
 	char label[16];
-	table = initSymTab(table);
 	while (token != EOF) {
 		token = asmlex();
 		if (token == LABEL) {
@@ -47,6 +57,5 @@ struct symTab firstPass(struct symTab table) {
 			installSym(table, label, LABEL, getlineKnt());
 		}
 	}
-
 	return table;
 }

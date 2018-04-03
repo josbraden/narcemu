@@ -21,6 +21,9 @@ Assembler header file
 //Other flex preprocessing
 extern FILE *yyin;
 extern char *yytext;
+extern void yyrestart(FILE *input_file);
+//Bison defines
+#define yyparse asmparse
 //**********Function prototypes**********
 //Lexical analyser
 int asmlex();

@@ -28,7 +28,7 @@ oneAddr		{ instrKnt++; return ONEADDR; }
 index		{ instrKnt++; return INDEX; }
 %%
 int totalMem() {
-	return instrKnt + varKnt;
+	return instrKnt + varKnt + labelKnt;
 }
 int getvarKnt() {
 	return varKnt;
