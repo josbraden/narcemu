@@ -3,6 +3,7 @@
 int instrKnt = 0;
 int varKnt = 0;
 int labelKnt = 0;
+int lineKnt = 0;
 %}
 comment     "//".*|"#".*
 label		[a-zA-Z]+[0-9]*":"
@@ -15,6 +16,7 @@ index		"LDX"|"STX"|"TIX"|"TDX"
 %%
 [ \t]       /* Consume whitespace */
 comment     /* Consume comments too */
+[\n]		{ lineKnt++; }
 ".data"		{ return DATA; }
 ".text"		{ return TEXT; }
 label		{ labelKnt++; return LABEL; }
@@ -36,4 +38,7 @@ int getinstrKnt() {
 }
 int getlabelKnt() {
 	return labelKnt;
+}
+int getlineKnt() {
+	return lineKnt;
 }

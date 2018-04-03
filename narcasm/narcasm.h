@@ -3,8 +3,9 @@
 
 Assembler header file
 */
+//Inclusions for this file
+#include <stdio.h>
 //Flex defines
-//Rename yylex() function to something unique to assembler
 #define yylex asmlex
 //Token Definitions
 #define DATA 101
@@ -16,6 +17,10 @@ Assembler header file
 #define ZEROADDR 107
 #define ONEADDR 108
 #define INDEX 109
+#define WORD 110
+//Other flex preprocessing
+extern FILE *yyin;
+extern char *yytext;
 //**********Function prototypes**********
 //Lexical analyser
 int asmlex();
@@ -23,5 +28,7 @@ int totalMem();
 int getvarKnt();
 int getinstrKnt();
 int getlabelKnt();
+int getlineKnt();
 //In narcasm.c
 int assembler(char input[4352], char output[4352]);
+struct symTab firstPass(struct symTab table);

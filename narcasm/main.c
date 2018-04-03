@@ -36,7 +36,10 @@ int main(int argc, char *argv[]) {
             }
         }
         //Call assembly function
-		assembler(input, output);
+		i = assembler(input, output);
+        if (i != 0) {
+            printf("Error %d occurred\n", i);
+        }
     }
 
     return 0;
