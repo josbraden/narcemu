@@ -1,5 +1,4 @@
-/*
-@author Josh Braden
+/* @author Josh Braden
 
 Assembler header file
 */
@@ -35,3 +34,4 @@ int getlineKnt();
 //In narcasm.c
 int assembler(char input[4352], char output[4352]);
 struct symTab firstPass(struct symTab table);
+struct symTab secondPass(unsigned short memMode, struct symTab table, FILE *ofile);

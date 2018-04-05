@@ -10,10 +10,11 @@ Main assembler file
 int assembler(char input[4352], char output[4352]) {
 	//Local data
 	int progSize;
-	unsigned short memMode;
 	FILE *ofile;
 	FILE *ifile;
 	struct symTab table;
+	unsigned short memMode;
+	memMode = 0;
 	//Open output file
 	ofile = fopen(output, "wb");
 	if (ofile == NULL) {
@@ -40,6 +41,7 @@ int assembler(char input[4352], char output[4352]) {
 		memMode = 0;
 	}
 	//Second pass
+	table = secondPass(memMode, table, ofile);
 	//Close files and exit
 	fclose(ifile);
 	fclose(ofile);
@@ -54,8 +56,18 @@ struct symTab firstPass(struct symTab table) {
 		if (token == LABEL) {
 			strcpy(label, yytext);
 			label[strlen((label) - 1)] = 0;
-			installSym(table, label, LABEL, getlineKnt());
+			if (lookupSym(table, label) == -1) {
+				installSym(table, label, LABEL, getlineKnt());
+			}
+			else {
+				//Fatal error, multiple label definitions
+			}
 		}
 	}
+	return table;
+}
+//Second pass function
+struct symTab secondPass(unsigned short memMode, struct symTab table, FILE *ofile) {
+
 	return table;
 }
