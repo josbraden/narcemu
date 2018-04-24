@@ -24,6 +24,8 @@ Header file for the virtual machine.
 #define TDX 0xf
 //Structs
 struct narcVM {
+	//Emulator devies
+	int vmstatus;
 	//IO devices
     FILE* console;
     FILE* input;
@@ -43,7 +45,7 @@ struct narcVM {
 //Functions
 int startMachine(int runMode, char filename[4352]);
 struct narcVM initMachine(struct narcVM vm);
-int openProg(struct narcVM vm, char filename[4352]);
-int execProg(struct narcVM vm);
-int execInstr(struct narcVM vm);
+struct narcVM openProg(struct narcVM vm, char filename[4352]);
+struct narcVM execProg(struct narcVM vm);
+struct narcVM execInstr(struct narcVM vm);
 unsigned short calcAddr(unsigned short mode, unsigned short address, struct narcVM vm);

@@ -16,6 +16,10 @@ Example:    ./narcemu program.bin
 Or:         ./narcemu /home/josh/program.bin
 Or:         ./narcemu
 
+'test.bin' is included as a test executable, currently it:
+1. gets a number from the user
+2. spits it out on screen
+
 ## Instruction set
 HLT
 LDA

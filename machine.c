@@ -10,21 +10,19 @@ In the event of instruction extension, more case statements need to be added to 
 #include "machine.h"
 #include <stdio.h>
 #include <string.h>
-//Function to initilize virtual machine and start either interactive or execute a filename
+//Start vm in interactive, or execute a filename
 int startMachine(int runMode, char filename[4352]) {
     //Local data
     struct narcVM vm;
     char input[4352];
-    int vmStatus;
     //initilize VM
     vm = initMachine(vm);
-    vmStatus = 0;
     //Continue
     if (runMode == 0) {
         //Drop to interactive mode
         fprintf(vm.console, "No file entered, dropping to interactive mode.\nType 'help' for options.\n");
-        strcpy(input, "");
         while (1) {
+	        strcpy(input, "");
         	fprintf(vm.console, ">>> ");
             fscanf(vm.input, "%s", input);
             //If help command is encountered
@@ -32,16 +30,16 @@ int startMachine(int runMode, char filename[4352]) {
                 fprintf(vm.console, "Enter a relative or absolute filename to execute.\nType 'help' or '?' for this text.\nType 'quit' or 'exit' to terminate.\n");
             }
             //If exit is encountered
-            if (strcmp(input, "quit") == 0 || strcmp(input, "exit") == 0) {
-                return vmStatus;
+            else if (strcmp(input, "quit") == 0 || strcmp(input, "exit") == 0) {
+                return vm.vmstatus;
             }
             else {
     	        //Execute program inputted by user
-    	        vmStatus = openProg(vm, input);
-    	        if (vmStatus == 1) {
+    	        vm = openProg(vm, input);
+    	        if (vm.vmstatus == 1) {
 					fprintf(vm.console, "Input file not found!\n");
     	        }
-    	        else if (vmStatus == 2) {
+    	        else if (vm.vmstatus == 2) {
 					fprintf(vm.console, "Out of memory\n");
     	        }
 	            strcpy(input, "");
@@ -50,16 +48,18 @@ int startMachine(int runMode, char filename[4352]) {
     }
     //Not interactive mode, execute file from the args and exit
     else {
-        vmStatus = openProg(vm, filename);
-        if (vmStatus == 1) {
+        vm = openProg(vm, filename);
+        if (vm.vmstatus == 1) {
 			fprintf(vm.console, "Input file not found!\n");
         }
     }
-    return vmStatus;
+    return vm.vmstatus;
 }
-//Function to initilize a VM: set registers to 0, wipe memory, set IO device pointers
+//Initilizes a VM: set registers to 0, wipe memory, set IO device pointers
 struct narcVM initMachine(struct narcVM vm) {
     int i;
+    //Init emulator devices
+    vm.vmstatus = 0;
     //Init registers
     vm.reg_acc = 0;
     vm.reg_memBuff = 0;
@@ -80,7 +80,7 @@ struct narcVM initMachine(struct narcVM vm) {
 	return vm;
 }
 //Function that executes a program using the passed vm and filename
-int openProg(struct narcVM vm, char filename[4352]) {
+struct narcVM openProg(struct narcVM vm, char filename[4352]) {
 	//Local data
 	FILE *infile;
 	int i;
@@ -88,8 +88,9 @@ int openProg(struct narcVM vm, char filename[4352]) {
 	//Open file
 	infile = fopen(filename, "rb");
 	if (infile == NULL) {
-		//Return file not found error code
-		return 1;
+		//Return with file not found error code
+		vm.vmstatus = 1;
+		return vm;
 	}
 	//Load program into vm RAM and close input file
 	i = 0;
@@ -97,47 +98,45 @@ int openProg(struct narcVM vm, char filename[4352]) {
 		if (i >= 65536) {
 			//VM out of memory, error
             fclose(infile);
-			return 2;
+            vm.vmstatus = 2;
+			return vm;
 		}
 		byteSwap = (readBuf >> 8) | (readBuf << 8);
 		vm.mem[i] = byteSwap;
 		i++;
 	}
 	fclose(infile);
-    //Execute program
-	return execProg(vm);
+    //Call execute function
+    vm = execProg(vm);
+	return vm;
 }
 //Executes a program stored in the VM's RAM
-int execProg(struct narcVM vm) {
-    //Local data
-    int instr;
+struct narcVM execProg(struct narcVM vm) {
     //Init: first instruction at address 0
     vm.reg_programCounter = 0;
     //Program execution loop
-    while(1) {
-        //***************Fetch***************
+    while (1) {
+        /***************Fetch***************/
         vm.reg_instruction = vm.mem[vm.reg_programCounter];
         vm.reg_programCounter++;
         //Decode and execute instruction
-        instr = execInstr(vm);
+        vm = execInstr(vm);
         //Exit if told to halt
-        if (instr == 0) {
+        if (vm.vmstatus == 0) {
             fprintf(vm.console, "Execution completed.\n");
-            return instr;
+            return vm;
         }
         //Exit if illegal instruction
-        else if (instr < 0 || instr > 0x1f) {
-            return instr;
+        else if (vm.vmstatus < 0 || vm.vmstatus > 0x1f) {
+            return vm;
         }
     }
 }
 //Decodes and executes the instruction in the instruction register
-int execInstr(struct narcVM vm) {
-    //Local data
+struct narcVM execInstr(struct narcVM vm) {
     unsigned short opcode, address, mode;
-    //init
     opcode = 0;
-    //***************Decode***************
+    /***************Decode***************/
     //Get extension bit
     opcode = vm.reg_instruction >> 11;
     opcode = opcode & 0x1;
@@ -145,14 +144,14 @@ int execInstr(struct narcVM vm) {
         opcode = 0x10;
     }
     //Get opcode
-    opcode += vm.reg_instruction >> 12; //discard 0-11
+    opcode += vm.reg_instruction >> 12;
     //Get address and mode
     address = vm.reg_instruction & 0xff;
-    mode = vm.reg_instruction >> 8; //discard 0-7
+    mode = vm.reg_instruction >> 8;
     mode = mode & 0x7;
     //Calculate effective address
     vm.reg_memAddress = calcAddr(mode, address, vm);
-    //***************Execute***************
+    /***************Execute***************/
     //Opcode decision case
     switch (opcode) {
         case HLT:
@@ -186,6 +185,7 @@ int execInstr(struct narcVM vm) {
         case RWD:
             fprintf(vm.console, "> ");
             fscanf(vm.input, "%hu", &vm.reg_acc);
+            fprintf(vm.console, "Testing, ACC: %hu\n", vm.reg_acc);
             break;
         case WWD:
             fprintf(vm.console, "%hu\n", vm.reg_acc);
@@ -212,8 +212,9 @@ int execInstr(struct narcVM vm) {
                     vm.reg_index3 = vm.mem[address];
                     break;
                 default:
-                    fprintf(vm.console, "Illegal instruction\n");
-                    return 0;
+                    fprintf(vm.console, "Illegal instruction encountered\n");
+                    vm.vmstatus = mode;
+                    return vm;
             }
             break;
         case STX:
@@ -231,8 +232,8 @@ int execInstr(struct narcVM vm) {
                     vm.mem[address] = vm.reg_index3;
                     break;
                 default:
-                    fprintf(vm.console, "Illegal instruction\n");
-                    return 0;
+                    vm.vmstatus = mode;
+                    return vm;
             }
             break;
         case TIX:
@@ -288,7 +289,8 @@ int execInstr(struct narcVM vm) {
         default:
             break;
     }
-    return opcode;
+    vm.vmstatus = opcode;
+    return vm;
 }
 //Function to calculate the effective address from a memory mode (instruction bits 8-10) and an address (instruction bits 0-7)
 unsigned short calcAddr(unsigned short mode, unsigned short address, struct narcVM vm) {

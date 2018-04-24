@@ -21,7 +21,6 @@ int main(int argc, char *argv[]) {
 	if (runStatus != 0) {
 		printf("VM exited with code: %d\n", runStatus);
 	}
-
 	return 0;
 }
 struct argStruct argHandler(int argc, char *argv[], struct argStruct args) {
@@ -49,5 +48,5 @@ struct argStruct argHandler(int argc, char *argv[], struct argStruct args) {
 			}
 		}
 	}
-	return args;	
+	return args;
 }
