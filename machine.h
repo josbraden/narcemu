@@ -49,4 +49,4 @@ struct narcVM openProg(struct narcVM vm, char filename[4352]);
 struct narcVM execProg(struct narcVM vm);
 struct narcVM execInstr(struct narcVM vm);
 unsigned short calcAddr(unsigned short mode, unsigned short address, struct narcVM vm);
-unsigned short updatePSR(unsigned short acc, unsigned short processorStatus);
+unsigned short updatePSR(unsigned short acc);

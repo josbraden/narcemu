@@ -70,6 +70,10 @@ struct narcVM initMachine(struct narcVM vm) {
     vm.reg_index2 = 0;
     vm.reg_index3 = 0;
     vm.reg_processorStatus = 0;
+    //Update status register
+    vm.reg_processorStatus = updatePSR(vm.reg_acc);
+    //testing
+    printf("PSR: %hu\n", vm.reg_processorStatus);
     //Set I/O file pointers
     vm.console = stdout;
     vm.input = stdin;
@@ -143,7 +147,7 @@ struct narcVM execInstr(struct narcVM vm) {
     /***************Decode***************/
     //Get extension bit
     opcode = vm.reg_instruction >> 11;
-    opcode = opcode & 0x1;
+    opcode &= 0x1;
     if (opcode == 1) { //if extension bit set, set opcode to 0xf+1
         opcode = 0x10;
     }
@@ -154,7 +158,7 @@ struct narcVM execInstr(struct narcVM vm) {
     //Get address and mode
     address = vm.reg_instruction & 0xff;
     mode = vm.reg_instruction >> 8;
-    mode = mode & 0x7;
+    mode &= 0x7;
     //Calculate effective address and set register
     vm.reg_memAddress = calcAddr(mode, address, vm);
     //testing
@@ -167,9 +171,13 @@ struct narcVM execInstr(struct narcVM vm) {
             break;
         case LDA:
             vm.reg_acc = vm.mem[vm.reg_memAddress];
+            //testing
+            printf("Loaded %hu from location %hu\n", vm.reg_acc, vm.reg_memAddress);
             break;
         case STA:
             vm.mem[vm.reg_memAddress] = vm.reg_acc;
+            //testing
+            printf("Stored %hu at location %hu\n", vm.reg_acc, vm.reg_memAddress);
             break;
         case ADD:
             vm.reg_acc += vm.mem[vm.reg_memAddress];
@@ -303,7 +311,9 @@ struct narcVM execInstr(struct narcVM vm) {
             break;
     }
     //Update the processor status register after every instruction execution
-	vm.reg_processorStatus = updatePSR(vm.reg_acc, vm.reg_processorStatus);
+	vm.reg_processorStatus = updatePSR(vm.reg_acc);
+    //testing
+    printf("PSR: %hu\n", vm.reg_processorStatus);
     vm.vmstatus = opcode;
     return vm;
 }
@@ -335,14 +345,24 @@ unsigned short calcAddr(unsigned short mode, unsigned short address, struct narc
     }
 }
 //Function to update the processor status register using the ACC register
-unsigned short updatePSR(unsigned short acc, unsigned short processorStatus) {
+unsigned short updatePSR(unsigned short acc) {
+    unsigned short psr;
+    psr = 0;
 	//Update Zero flag
 	if (acc == 0) {
-		processorStatus = processorStatus | 0x4;
+		psr |= 0x4;
+        return psr;
 	}
+    /*else {
+        psr &= 0x4; //Else clear it
+    }*/
 	//Update negative flag
 	if ((acc >> 15) == 1) {
-		processorStatus = processorStatus | 0x8;
+		psr |= 0x8; //If negative, set 4th bit
 	}
-	return processorStatus;
+    /*else {
+        psr &= 0x8;
+        printf("SetPSR: %hu\n", psr);
+    }*/
+	return psr;
 }
