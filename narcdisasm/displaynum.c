@@ -38,13 +38,19 @@ void printA(unsigned short inputNum) {
 }
 //Part B: 4-digit hex number
 void printB(unsigned short inputNum) {
-        printf("%04X", inputNum);
+    printf("%04X", inputNum);
 	printf(" ");
 }
 //Part C: 5-bit unsigned base-10 integer extracted from bits 15-11 of the number
+//Updated to print opcode and extension bit seperatly
 void printC(unsigned short inputNum) {
-	inputNum = inputNum >> 11; //discard bits 0-10
+	unsigned short exbit;
+	exbit = inputNum >> 11;
+	exbit = exbit & 0x1;
+	inputNum = inputNum >> 12; //discard bits 0-11
 	printf("%02d", inputNum);
+	printf(" ");
+	printf("%01d", exbit);
 	printf(" ");
 }
 //Part D: 1-bit value extracted from bit 10 of the number

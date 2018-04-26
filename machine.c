@@ -117,6 +117,8 @@ struct narcVM execProg(struct narcVM vm) {
     //Program execution loop
     while (1) {
         /***************Fetch***************/
+		//testing
+	    printf("PC: %hu\n", vm.reg_programCounter);
         vm.reg_instruction = vm.mem[vm.reg_programCounter];
         vm.reg_programCounter++;
         //Decode and execute instruction
@@ -136,6 +138,8 @@ struct narcVM execProg(struct narcVM vm) {
 struct narcVM execInstr(struct narcVM vm) {
     unsigned short opcode, address, mode;
     opcode = 0;
+    address = 0;
+    mode = 0;
     /***************Decode***************/
     //Get extension bit
     opcode = vm.reg_instruction >> 11;
@@ -145,12 +149,17 @@ struct narcVM execInstr(struct narcVM vm) {
     }
     //Get opcode
     opcode += vm.reg_instruction >> 12;
+    //testing
+    printf("Opcode: %hu\n", opcode);
     //Get address and mode
     address = vm.reg_instruction & 0xff;
     mode = vm.reg_instruction >> 8;
     mode = mode & 0x7;
-    //Calculate effective address
+    //Calculate effective address and set register
     vm.reg_memAddress = calcAddr(mode, address, vm);
+    //testing
+    printf("Address: %hu\n", vm.reg_memAddress);
+    printf("ACC: %hu\n", vm.reg_acc);
     /***************Execute***************/
     //Opcode decision case
     switch (opcode) {
@@ -168,24 +177,28 @@ struct narcVM execInstr(struct narcVM vm) {
         case TCA:
             vm.reg_acc = ~vm.reg_acc;
             vm.reg_acc++;
+            //testing
+            printf("TCA result: %hu\n", vm.reg_acc);
             break;
         case BRU:
-            vm.reg_programCounter = vm.mem[vm.reg_memAddress];
+            //vm.reg_programCounter = vm.mem[vm.reg_memAddress];
+            vm.reg_programCounter = vm.reg_memAddress;
             break;
         case BIP:
             if (((vm.reg_processorStatus >> 2) & 3) == 0) {
-                vm.reg_programCounter = vm.mem[vm.reg_memAddress];
+                //vm.reg_programCounter = vm.mem[vm.reg_memAddress];
+                vm.reg_programCounter = vm.reg_memAddress;
             }
             break;
         case BIN:
             if (((vm.reg_processorStatus >> 3) & 1) == 1) {
-                vm.reg_programCounter = vm.mem[vm.reg_memAddress];
+                //vm.reg_programCounter = vm.mem[vm.reg_memAddress];
+                vm.reg_programCounter = vm.reg_memAddress;
             }
             break;
         case RWD:
             fprintf(vm.console, "> ");
             fscanf(vm.input, "%hu", &vm.reg_acc);
-            fprintf(vm.console, "Testing, ACC: %hu\n", vm.reg_acc);
             break;
         case WWD:
             fprintf(vm.console, "%hu\n", vm.reg_acc);
@@ -289,6 +302,8 @@ struct narcVM execInstr(struct narcVM vm) {
         default:
             break;
     }
+    //Update the processor status register after every instruction execution
+	vm.reg_processorStatus = updatePSR(vm.reg_acc, vm.reg_processorStatus);
     vm.vmstatus = opcode;
     return vm;
 }
@@ -318,4 +333,16 @@ unsigned short calcAddr(unsigned short mode, unsigned short address, struct narc
         default:
             return address;
     }
+}
+//Function to update the processor status register using the ACC register
+unsigned short updatePSR(unsigned short acc, unsigned short processorStatus) {
+	//Update Zero flag
+	if (acc == 0) {
+		processorStatus = processorStatus | 0x4;
+	}
+	//Update negative flag
+	if ((acc >> 15) == 1) {
+		processorStatus = processorStatus | 0x8;
+	}
+	return processorStatus;
 }

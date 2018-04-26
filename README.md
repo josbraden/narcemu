@@ -20,23 +20,23 @@ Or:         ./narcemu
 1. gets a number from the user
 2. spits it out on screen
 
-## Instruction set
-HLT
-LDA
-STA
-ADD
-TCA
-BRU
-BIP
-BIN
-RWD
-WWD
-SHL
-SHR
-LDX
-STX
-TIX
-TDX
+## Instructions/opcodes
+HLT		0
+LDA		1
+STA		2
+ADD		3
+TCA		4
+BRU		5
+BIP		6
+BIN		7
+RWD		8
+WWD		9
+SHL		A
+SHR		B
+LDX		C
+STX		D
+TIX		E
+TDX		F
 
 # Future work
 If I get time I'll try and get an assembler and c-ish compiler working.

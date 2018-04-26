@@ -16,4 +16,4 @@ narcasm.yy.o: narcasm.l narcasm.h
 	flex -o narcasm.yy.c narcasm.l
 	gcc -c -o narcasm.yy.o narcasm.yy.c
 clean:
-	rm narcasm main.o narcasm.o symtab.o narcasm.yy.o narcasm.yy.c
+	-rm -f narcasm main.o narcasm.o symtab.o narcasm.yy.o narcasm.yy.c

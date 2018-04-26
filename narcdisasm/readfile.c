@@ -12,15 +12,19 @@ and the actual reading of the binary
 void openfile(char *filename) {
 	FILE *infile;
 	unsigned short readBuffer, byteSwap;
+	int instrKnt;
+	instrKnt = 0;
 	infile = fopen(filename, "rb");
 	if (infile == NULL) {
 		printf("File does not exist!\n");
 	}
 	else {
-		printf("Binary           Hex  Op IndirF IndexF Address\n");
+		printf("          Binary           Hex  Op E IndirF IndexF Address\n");
 		//Loop to read two bytes at a time until EOF
 		while (fread(&readBuffer, 1, 2, infile) == 2) {
 			byteSwap = (readBuffer >> 8) | (readBuffer << 8);
+			printf("%8d: ", instrKnt);
+			instrKnt++;
 			printAll(byteSwap);
 		}
 	}
