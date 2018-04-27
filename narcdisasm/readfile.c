@@ -16,7 +16,7 @@ void openfile(char *filename) {
 	instrKnt = 0;
 	infile = fopen(filename, "rb");
 	if (infile == NULL) {
-		printf("File does not exist!\n");
+		printf("Input file not found\n");
 	}
 	else {
 		printf("          Binary           Hex  Op E IndirF IndexF Address\n");
