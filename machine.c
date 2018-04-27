@@ -15,9 +15,8 @@ int startMachine(int runMode, char filename[4352]) {
     //Local data
     struct narcVM vm;
     char input[4352];
-    //initilize VM
+	//Start
     vm = initMachine(vm);
-    //Continue
     if (runMode == 0) {
         //Drop to interactive mode
         fprintf(vm.console, "No file entered, dropping to interactive mode.\nType 'help' for options.\n");
@@ -61,10 +60,10 @@ struct narcVM openProg(struct narcVM vm, char filename[4352]) {
 	FILE *infile;
 	int i;
 	unsigned short readBuf, byteSwap;
-	//Open file
+	//Start
 	infile = fopen(filename, "rb");
 	if (infile == NULL) {
-		//Return with file not found error code
+		//File not found
 		vm.vmstatus = 1;
 		return vm;
 	}
@@ -82,7 +81,7 @@ struct narcVM openProg(struct narcVM vm, char filename[4352]) {
 		i++;
 	}
 	fclose(infile);
-    //Call execute function
+	//Begin program execution
     vm = execProg(vm);
 	return vm;
 }
@@ -113,9 +112,7 @@ struct narcVM execProg(struct narcVM vm) {
 //Decodes and executes the instruction in the instruction register
 struct narcVM execInstr(struct narcVM vm) {
     unsigned short opcode, address, mode;
-    opcode = 0;
-    address = 0;
-    mode = 0;
+    opcode = address = mode = 0;
     /***************Decode***************/
     //Get extension bit
     opcode = vm.reg_instruction >> 11;
@@ -283,7 +280,7 @@ struct narcVM execInstr(struct narcVM vm) {
         default:
             break;
     }
-    //Update the processor status register after every instruction execution
+    //Update the processor status register after every instruction
 	vm.reg_processorStatus = updatePSR(vm.reg_acc, vm.overflow);
     //testing
     printf("PSR: %hu\n", vm.reg_processorStatus);
