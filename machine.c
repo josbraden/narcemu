@@ -55,34 +55,6 @@ int startMachine(int runMode, char filename[4352]) {
     }
     return vm.vmstatus;
 }
-//Initilizes a VM: set registers to 0, wipe memory, set IO device pointers
-struct narcVM initMachine(struct narcVM vm) {
-    int i;
-    //Init emulator devices
-    vm.vmstatus = 0;
-    //Init registers
-    vm.reg_acc = 0;
-    vm.reg_memBuff = 0;
-    vm.reg_instruction = 0;
-    vm.reg_memAddress = 0;
-    vm.reg_programCounter = 0;
-    vm.reg_index1 = 0;
-    vm.reg_index2 = 0;
-    vm.reg_index3 = 0;
-    vm.reg_processorStatus = 0;
-    //Update status register
-    vm.reg_processorStatus = updatePSR(vm.reg_acc);
-    //testing
-    printf("PSR: %hu\n", vm.reg_processorStatus);
-    //Set I/O file pointers
-    vm.console = stdout;
-    vm.input = stdin;
-    //wipe memory
-    for (i = 0; i < 65536; i++) {
-        vm.mem[i] = 0;
-    }
-	return vm;
-}
 //Function that executes a program using the passed vm and filename
 struct narcVM openProg(struct narcVM vm, char filename[4352]) {
 	//Local data
@@ -180,6 +152,7 @@ struct narcVM execInstr(struct narcVM vm) {
             printf("Stored %hu at location %hu\n", vm.reg_acc, vm.reg_memAddress);
             break;
         case ADD:
+        	vm.overflow = vm.reg_acc + vm.mem[vm.reg_memAddress];
             vm.reg_acc += vm.mem[vm.reg_memAddress];
             break;
         case TCA:
@@ -311,11 +284,40 @@ struct narcVM execInstr(struct narcVM vm) {
             break;
     }
     //Update the processor status register after every instruction execution
-	vm.reg_processorStatus = updatePSR(vm.reg_acc);
+	vm.reg_processorStatus = updatePSR(vm.reg_acc, vm.overflow);
     //testing
     printf("PSR: %hu\n", vm.reg_processorStatus);
     vm.vmstatus = opcode;
     return vm;
+}
+//Initilizes a VM: set registers to 0, wipe memory, set IO device pointers
+struct narcVM initMachine(struct narcVM vm) {
+    int i;
+    //Init emulator devices
+    vm.vmstatus = 0;
+    vm.overflow = 0;
+    //Init registers
+    vm.reg_acc = 0;
+    vm.reg_memBuff = 0;
+    vm.reg_instruction = 0;
+    vm.reg_memAddress = 0;
+    vm.reg_programCounter = 0;
+    vm.reg_index1 = 0;
+    vm.reg_index2 = 0;
+    vm.reg_index3 = 0;
+    vm.reg_processorStatus = 0;
+    //Update status register
+    vm.reg_processorStatus = updatePSR(vm.reg_acc, vm.overflow);
+    //testing
+    printf("PSR: %hu\n", vm.reg_processorStatus);
+    //Set I/O file pointers
+    vm.console = stdout;
+    vm.input = stdin;
+    //wipe memory
+    for (i = 0; i < 65536; i++) {
+        vm.mem[i] = 0;
+    }
+	return vm;
 }
 //Function to calculate the effective address from a memory mode (instruction bits 8-10) and an address (instruction bits 0-7)
 unsigned short calcAddr(unsigned short mode, unsigned short address, struct narcVM vm) {
@@ -344,25 +346,21 @@ unsigned short calcAddr(unsigned short mode, unsigned short address, struct narc
             return address;
     }
 }
-//Function to update the processor status register using the ACC register
-unsigned short updatePSR(unsigned short acc) {
+//Function to update the processor status register
+unsigned short updatePSR(unsigned short acc, int overflow) {
     unsigned short psr;
     psr = 0;
+	//Update overflow flag
+	if (overflow > 65536) {
+		psr |= 0x2;
+	}
 	//Update Zero flag
 	if (acc == 0) {
 		psr |= 0x4;
-        return psr;
 	}
-    /*else {
-        psr &= 0x4; //Else clear it
-    }*/
 	//Update negative flag
 	if ((acc >> 15) == 1) {
-		psr |= 0x8; //If negative, set 4th bit
+		psr |= 0x8;
 	}
-    /*else {
-        psr &= 0x8;
-        printf("SetPSR: %hu\n", psr);
-    }*/
 	return psr;
 }
