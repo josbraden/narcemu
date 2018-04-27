@@ -5,7 +5,7 @@ COSC 3327 Homework 2
 Simple char stack, works as a string inverter for outputs
 Only 16 bytes are needed, because the most data that gets pushed is one 16 bit number.
 */
-#include "narcdisasm.h"
+#include "stack.h"
 #define STACKSIZE 16
 //Shared data: stack space and knt
 char stackSpace[STACKSIZE];

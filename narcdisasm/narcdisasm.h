@@ -9,7 +9,3 @@ void printC(unsigned short inputNum);
 void printD(unsigned short inputNum);
 void printE(unsigned short inputNum);
 void printF(unsigned short inputNum);
-//stack.c
-void stackInit();
-void stackPush(char input);
-char stackPop();

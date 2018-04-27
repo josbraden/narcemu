@@ -5,6 +5,7 @@ COSC 3327 Homework 2
 Source file to handle the printing of the binary digits on the screen.
 */
 #include "narcdisasm.h"
+#include "stack.h"
 #include <stdio.h>
 //Calls other print functions
 void printAll(unsigned short inputBuffer) {
