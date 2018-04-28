@@ -117,7 +117,7 @@ struct narcVM execInstr(struct narcVM vm) {
     //Get extension bit
     opcode = vm.reg_instruction >> 11;
     opcode &= 0x1;
-    if (opcode == 1) { //if extension bit set, set opcode to 0xf+1
+    if (opcode == 1) {
         opcode = 0x10;
     }
     //Get opcode
@@ -134,7 +134,6 @@ struct narcVM execInstr(struct narcVM vm) {
     printf("Address: %hu\n", vm.reg_memAddress);
     printf("ACC: %hu\n", vm.reg_acc);
     /***************Execute***************/
-    //Opcode decision case
     switch (opcode) {
         case HLT:
             break;
@@ -305,8 +304,6 @@ struct narcVM initMachine(struct narcVM vm) {
     vm.reg_processorStatus = 0;
     //Update status register
     vm.reg_processorStatus = updatePSR(vm.reg_acc, vm.overflow);
-    //testing
-    printf("PSR: %hu\n", vm.reg_processorStatus);
     //Set I/O file pointers
     vm.console = stdout;
     vm.input = stdin;

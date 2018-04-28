@@ -2,6 +2,7 @@
 @author Josh Braden
 
 Written for COSC 3327
+Header file for narcemu
 */
 //Structs
 struct argStruct {
@@ -10,5 +11,4 @@ struct argStruct {
 	int runMode;
 };
 //Function declarations
-//In file main.c
 struct argStruct argHandler(int argc, char *argv[], struct argStruct args);

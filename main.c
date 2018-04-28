@@ -12,7 +12,6 @@ int main(int argc, char *argv[]) {
 	struct argStruct args;
 	int runStatus;
 	args = argHandler(argc, argv, args);
-	//If help called, don't continue
 	if (args.helpFlag == 1) {
 		return 0;
 	}
@@ -23,9 +22,9 @@ int main(int argc, char *argv[]) {
 	}
 	return 0;
 }
+//Args are currently helptext or program file name
 struct argStruct argHandler(int argc, char *argv[], struct argStruct args) {
 	int i;
-	//No args, drop to interactive mode
 	if (argc == 1) {
 		args.runMode = 0;
 		return args;
