@@ -1,8 +1,6 @@
 # narcemu
 
-A NARC (Not A Real Computer) Emulator
-
-by Josh Braden
+A NARC (Not A Real Computer) Emulator by Josh Braden
 
 NARC is a 16-bit accumulator machine, written for COSC 3347 (Computer Architecture)
 
@@ -26,44 +24,26 @@ Or:         ./narcemu /home/josh/program.bin
 
 Or:         ./narcemu
 
-'test.bin' is included as a test executable, currently it:
-
-1. gets a number from the user
-2. spits it out on screen
-
 ## Instructions/opcodes
 
-HLT    0
-
-LDA    1
-
-STA    2
-
-ADD    3
-
-TCA    4
-
-BRU    5
-
-BIP    6
-
-BIN    7
-
-RWD    8
-
-WWD    9
-
-SHL    A
-
-SHR    B
-
-LDX    C
-
-STX    D
-
-TIX    E
-
-TDX    F
+| Instruction   | Opcode |
+| -----------   | ------ |
+| HLT           | 0      |
+| LDA           | 1      |
+| STA           | 2      |
+| ADD           | 3      |
+| TCA           | 4      |
+| BRU           | 5      |
+| BIP           | 6      |
+| BIN           | 7      |
+| RWD           | 8      |
+| WWD           | 9      |
+| SHL           | A      |
+| SHR           | B      |
+| LDX           | C      |
+| STX           | D      |
+| TIX           | E      |
+| TDX           | F      |
 
 ## Future work
 
