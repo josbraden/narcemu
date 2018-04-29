@@ -35,7 +35,7 @@ struct argStruct argHandler(int argc, char *argv[], struct argStruct args) {
 			//Helptext flag
 			if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
 				//print help
-				printf("Usage: narcemu [options]|[program name]\nExample: ./narcemu program.bin\n");
+				printf("Usage: narcemu ([options]|[program name])?\n\tExample: ./narcemu program.bin\n\tOr: ./narcemu");
 				args.helpFlag = 1;
 				return args;
 			}

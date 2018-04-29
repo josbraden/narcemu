@@ -10,9 +10,11 @@ Currently the machine supports the existing 16 instructions in the standard set 
 
 ## Compilation instructions
 
-Type 'make' to compile.
+Type 'make' to compile the emulator.
 
-Type 'make clean' to delete binary files.
+'make all' will comile the emulator and extra programs.
+
+Run 'make clean' to delete binary files.
 
 ## Usage
 
@@ -48,3 +50,5 @@ Or:         ./narcemu
 ## Future work
 
 If I get time I'll try and get an assembler and c-ish compiler working.
+
+A "dissasembler" is included under 'narcdisasm', which decodes and prints instructions from a binary file.  Useful for testing.

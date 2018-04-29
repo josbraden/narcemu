@@ -10,5 +10,5 @@ struct argStruct {
 	int helpFlag;
 	int runMode;
 };
-//Function declarations
+//Functions
 struct argStruct argHandler(int argc, char *argv[], struct argStruct args);

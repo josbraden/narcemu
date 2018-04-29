@@ -103,7 +103,7 @@ struct narcVM execProg(struct narcVM vm) {
             fprintf(vm.console, "Execution completed.\n");
             return vm;
         }
-        //Exit if illegal instruction
+        //Exit if illegal instruction encountered
         else if (vm.vmstatus < 0 || vm.vmstatus > 0x1f) {
             return vm;
         }
@@ -186,7 +186,7 @@ struct narcVM execInstr(struct narcVM vm) {
         case SHR:
             vm.reg_acc = vm.reg_acc >> 1;
             break;
-        //Index register instructions: need to resolve indirection if any and use mode as register selection
+        //Index register instructions
         case LDX:
             if (mode >=4 && mode <= 7) {
                 address = vm.mem[address];
