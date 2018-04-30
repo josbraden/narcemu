@@ -53,19 +53,17 @@ Or:         ./narcemu
 
 Each instruction in a NARC program occupies a 16-bit word. An instruction word has four fields, as shown below:
 
-0000 1 2 33 44444444
+0000123344444444
 
-^    ^ ^ ^  ^
+0. Opcode
 
-|    | | |  | Address
+1. Opcode Extension
 
-|    | | | Index Flag
+2. Indirect Flag
 
-|    | | Indirect Flag
+3. Index Flag
 
-|    | Opcode Extension
-
-| Opcode
+4. Address
 
 ## Future work
 
