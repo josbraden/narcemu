@@ -1,6 +1,5 @@
 narcasm: main.o narcasm.o narcasm.yy.o symtab.o
-	make objects
-	gcc -static -o narcasm main.o narcasm.o narcasm.yy.o -lfl
+	gcc -static -o narcasm main.o narcasm.o symtab.o narcasm.yy.o -lfl
 objects:
 	make main.o
 	make narcasm.o
@@ -8,11 +7,11 @@ objects:
 	make symtab.o
 main.o: main.c
 	gcc -Wall -c -o main.o main.c
-narcasm.o: narcasm.c narcasm.h
+narcasm.o: narcasm.c
 	gcc -Wall -c -o narcasm.o narcasm.c
-symtab.o: symtab.c symtab.h
+symtab.o: symtab.c
 	gcc -Wall -c -o symtab.o symtab.c
-narcasm.yy.o: narcasm.l narcasm.h
+narcasm.yy.o: narcasm.l
 	flex -o narcasm.yy.c narcasm.l
 	gcc -c -o narcasm.yy.o narcasm.yy.c
 clean:

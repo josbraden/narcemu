@@ -7,6 +7,7 @@ Main assembler file
 #include "symtab.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 int assembler(char input[4352], char output[4352]) {
 	//Local data
 	int progSize;
@@ -52,7 +53,7 @@ int assembler(char input[4352], char output[4352]) {
 struct symTab firstPass(struct symTab table) {
 	int token;
 	char label[16];
-	while (token != EOF) {
+	while (token != 0) {
 		token = asmlex();
 		if (token == LABEL) {
 			strcpy(label, yytext);
@@ -61,7 +62,8 @@ struct symTab firstPass(struct symTab table) {
 				installSym(table, label, LABEL, getlineKnt());
 			}
 			else {
-				//Fatal error, multiple label definitions
+				printf("Fatal error, multiple label definitions\n");
+				//todo handle errors
 			}
 		}
 	}
@@ -69,6 +71,7 @@ struct symTab firstPass(struct symTab table) {
 }
 //Second pass function
 struct symTab secondPass(unsigned short memMode, struct symTab table, FILE *ofile) {
+	unsigned  short instruction;
 	int token;
 	char label[16];
 	token = asmlex();
@@ -79,16 +82,14 @@ struct symTab secondPass(unsigned short memMode, struct symTab table, FILE *ofil
 	//Get variables until .text encountered
 	while (token != TEXT) {
 		strcpy(label, "");
-		if (token == VAR) {
-			strcpy(label, yytext);
-		}
-		else {
+		if (token != TYPE) {
 			//error
 		}
 		token = asmlex();
-		if (token == LITERAL) {
+		if (token == VAR) {
+			strcpy(label, yytext);
 			if (lookupSym(table, label) == -1) {
-				installSym(table, label, LITERAL, yylval);
+				installSym(table, label, VAR, 0);
 			}
 			//else already in table
 		}
@@ -97,10 +98,23 @@ struct symTab secondPass(unsigned short memMode, struct symTab table, FILE *ofil
 		}
 	}
 	//Process instructions
-	while (token != NULL) {
+	while (token != 0) {
+		instruction = 0;
 		token = asmlex();
 		if (token == ZEROADDR) {
-
+			if (strcmp(yytext, "HLT") == 0) {
+				instruction = 0;
+			}
+			else if (strcmp(yytext, "SHL") == 0) {
+				instruction = 0xa;
+			}
+			else if (strcmp(yytext, "SHR") == 0) {
+				instruction = 0xb;
+			}
+			else if (strcmp(yytext, "RWD") == 0) {
+				instruction = 0x8;
+			}
+			instruction = instruction << 12;
 		}
 		else if (token == ONEADDR) {
 
@@ -111,6 +125,7 @@ struct symTab secondPass(unsigned short memMode, struct symTab table, FILE *ofil
 		else {
 			//error
 		}
+		fprintf(ofile, "%hu", instruction);
 	}
 	return table;
 }

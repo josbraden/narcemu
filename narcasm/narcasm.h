@@ -6,7 +6,6 @@ Assembler header file
 #include <stdio.h>
 //Flex defines
 #define yylex asmlex
-#define YYSTYPE int
 //Token Definitions
 #define DATA 101
 #define TEXT 102
@@ -21,7 +20,6 @@ Assembler header file
 //Other flex preprocessing
 extern FILE *yyin;
 extern char *yytext;
-extern YYSTYPE yylval;
 extern void yyrestart(FILE *input_file);
 //Bison defines
 #define yyparse asmparse

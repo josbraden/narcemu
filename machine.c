@@ -10,7 +10,7 @@ In the event of instruction extension, more case statements need to be added to 
 #include "machine.h"
 #include <stdio.h>
 #include <string.h>
-//Start vm in interactive, or execute a filename
+//Starts vm in interactive mode, or executes a filename
 int startMachine(int runMode, char filename[4352]) {
     //Local data
     struct narcVM vm;
@@ -33,13 +33,13 @@ int startMachine(int runMode, char filename[4352]) {
                 return vm.vmstatus;
             }
             else {
-    	        //Execute program inputted by user
+    	        //Try to execute filename
     	        vm = openProg(vm, input);
     	        if (vm.vmstatus == 1) {
 					fprintf(vm.console, "Input file not found!\n");
     	        }
     	        else if (vm.vmstatus == 2) {
-					fprintf(vm.console, "Out of memory\n");
+					fprintf(vm.console, "VM out of memory\n");
     	        }
 	            strcpy(input, "");
             }
@@ -71,7 +71,7 @@ struct narcVM openProg(struct narcVM vm, char filename[4352]) {
 	i = 0;
 	while (fread(&readBuf, 1, 2, infile) == 2) {
 		if (i >= 65536) {
-			//VM out of memory, error
+			//VM out of memory
             fclose(infile);
             vm.vmstatus = 2;
 			return vm;
@@ -81,13 +81,12 @@ struct narcVM openProg(struct narcVM vm, char filename[4352]) {
 		i++;
 	}
 	fclose(infile);
-	//Begin program execution
     vm = execProg(vm);
 	return vm;
 }
 //Executes a program stored in the VM's RAM
 struct narcVM execProg(struct narcVM vm) {
-    //Init: first instruction at address 0
+    //First instruction is at address 0
     vm.reg_programCounter = 0;
     //Program execution loop
     while (1) {
@@ -120,11 +119,11 @@ struct narcVM execInstr(struct narcVM vm) {
     }
     //Get opcode
     opcode += vm.reg_instruction >> 12;
-    //Get address and mode
+    //Get address and addressing mode
     address = vm.reg_instruction & 0xff;
     mode = vm.reg_instruction >> 8;
     mode &= 0x7;
-    //Calculate effective address and set register
+    //Calculate effective address and set memory address register
     vm.reg_memAddress = calcAddr(mode, address, vm);
     /***************Execute***************/
     switch (opcode) {
@@ -268,13 +267,13 @@ struct narcVM execInstr(struct narcVM vm) {
     vm.vmstatus = opcode;
     return vm;
 }
-//Initilizes a VM: set registers to 0, wipe memory, set IO device pointers
+//Initializes a VM: set registers to 0, wipe memory, set IO device pointers
 struct narcVM initMachine(struct narcVM vm) {
     int i;
-    //Init emulator devices
+    //Initialize emulator devices
     vm.vmstatus = 0;
     vm.overflow = 0;
-    //Init registers
+    //Initialize registers
     vm.reg_acc = 0;
     vm.reg_memBuff = 0;
     vm.reg_instruction = 0;
