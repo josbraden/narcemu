@@ -26,26 +26,46 @@ Or:         ./narcemu /home/josh/program.bin
 
 Or:         ./narcemu
 
-## Instructions/opcodes
+## NARC Documentation
 
-| Instruction   | Opcode |
-| -----------   | ------ |
-| HLT           | 0      |
-| LDA           | 1      |
-| STA           | 2      |
-| ADD           | 3      |
-| TCA           | 4      |
-| BRU           | 5      |
-| BIP           | 6      |
-| BIN           | 7      |
-| RWD           | 8      |
-| WWD           | 9      |
-| SHL           | A      |
-| SHR           | B      |
-| LDX           | C      |
-| STX           | D      |
-| TIX           | E      |
-| TDX           | F      |
+### Instructions/opcodes
+
+| Instruction   | Opcode | Description |
+| -----------   | ------ | ----------- |
+| HLT           | 0      | Halt |
+| LDA           | 1      | ACC <- M[MEM] |
+| STA           | 2      | M[MEM] <- ACC |
+| ADD           | 3      | ACC <- ACC + M[MEM] |
+| TCA           | 4      | ACC <- !ACC + 1 (2’s Complement) |
+| BRU           | 5      | Branch unconditional |
+| BIP           | 6      | Branch if ACC > 0 |
+| BIN           | 7      | Branch if ACC < 0 |
+| RWD           | 8      | Read a word into ACC |
+| WWD           | 9      | Write a word from ACC |
+| SHL           | A      | Shift left ACC once |
+| SHR           | B      | Shift right ACC once |
+| LDX           | C      | INDEX <- M[MEM] |
+| STX           | D      | M[MEM] <- INDEX |
+| TIX           | E      | Test index increment: INDEX <- INDEX + 1; Branch if INDEX = 0 |
+| TDX           | F      | Test Index Decrement: INDEX <- INDEX - 1; Branch if INDEX != 0 |
+
+### Instruction Format
+
+Each instruction in a NARC program occupies a 16-bit word. An instruction word has four fields, as shown below:
+
+0000 1 2 33 44444444
+
+^    ^ ^ ^  ^
+
+|    | | |  | Address
+
+|    | | | Index Flag
+
+|    | | Indirect Flag
+
+|    | Opcode Extension
+
+| Opcode
 
 ## Future work
 
