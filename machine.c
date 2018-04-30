@@ -269,7 +269,6 @@ struct narcVM execInstr(struct narcVM vm) {
 }
 //Initializes a VM: set registers to 0, wipe memory, set IO device pointers
 struct narcVM initMachine(struct narcVM vm) {
-    int i;
     //Initialize emulator devices
     vm.vmstatus = 0;
     vm.overflow = 0;
@@ -289,9 +288,7 @@ struct narcVM initMachine(struct narcVM vm) {
     vm.console = stdout;
     vm.input = stdin;
     //wipe memory
-    for (i = 0; i < 65536; i++) {
-        vm.mem[i] = 0;
-    }
+    memset(vm.mem, 0, sizeof(vm.mem));
 	return vm;
 }
 //Function to calculate the effective address from a memory mode (instruction bits 8-10) and an address (instruction bits 0-7)
