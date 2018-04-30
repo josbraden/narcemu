@@ -69,6 +69,48 @@ struct symTab firstPass(struct symTab table) {
 }
 //Second pass function
 struct symTab secondPass(unsigned short memMode, struct symTab table, FILE *ofile) {
+	int token;
+	char label[16];
+	token = asmlex();
+	//Find .data section
+	while (token != DATA) {
+		token = asmlex();
+	}
+	//Get variables until .text encountered
+	while (token != TEXT) {
+		strcpy(label, "");
+		if (token == VAR) {
+			strcpy(label, yytext);
+		}
+		else {
+			//error
+		}
+		token = asmlex();
+		if (token == LITERAL) {
+			if (lookupSym(table, label) == -1) {
+				installSym(table, label, LITERAL, yylval);
+			}
+			//else already in table
+		}
+		else {
+			//error
+		}
+	}
+	//Process instructions
+	while (token != NULL) {
+		token = asmlex();
+		if (token == ZEROADDR) {
 
+		}
+		else if (token == ONEADDR) {
+
+		}
+		else if (token == INDEX) {
+
+		}
+		else {
+			//error
+		}
+	}
 	return table;
 }
