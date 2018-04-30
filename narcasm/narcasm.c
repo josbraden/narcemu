@@ -42,9 +42,10 @@ int assembler(char input[4352], char output[4352]) {
 	}
 	//Second pass
 	table = secondPass(memMode, table, ofile);
-	//Close files and exit
+	//Close files, free memory, and exit
 	fclose(ifile);
 	fclose(ofile);
+	table = freeSymTab(table);
 	return 0;
 }
 //First pass function: creates symbol table, as well as getting the size of the assembly program.

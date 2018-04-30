@@ -41,6 +41,5 @@ int main(int argc, char *argv[]) {
             printf("Error %d occurred\n", i);
         }
     }
-
     return 0;
 }

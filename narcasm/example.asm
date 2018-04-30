@@ -1,4 +1,5 @@
 # Comments are remaining line length and begin with '#' or '//'
+// Also a comment
 # Program must start with .data segment
 .data
 word	x		# Only supported data type by NARC is word

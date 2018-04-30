@@ -16,16 +16,16 @@ index		"LDX"|"STX"|"TIX"|"TDX"
 %%
 [ \t]       /* Consume whitespace */
 comment     /* Consume comments too */
-[\n]		{ lineKnt++; }
-".data"		{ return DATA; }
-".text"		{ return TEXT; }
-label		{ labelKnt++; return LABEL; }
-var			{ return VAR; }
-literal		{ return LITERAL; }
-type		{ varKnt++; return TYPE; }
-zeroAddr	{ instrKnt++; return ZEROADDR; }
-oneAddr		{ instrKnt++; return ONEADDR; }
-index		{ instrKnt++; return INDEX; }
+[\n]		{lineKnt++;}
+".data"		{return DATA;}
+".text"		{return TEXT;}
+label		{labelKnt++; return LABEL;}
+var			{return VAR;}
+literal		{return LITERAL;}
+type		{varKnt++; return TYPE;}
+zeroAddr	{instrKnt++; return ZEROADDR;}
+oneAddr		{instrKnt++; return ONEADDR;}
+index		{instrKnt++; return INDEX;}
 %%
 int totalMem() {
 	return instrKnt + varKnt + labelKnt;
