@@ -12,7 +12,7 @@ Currently the machine supports the existing 16 instructions in the standard set 
 
 Type 'make' to compile the emulator.
 
-'make all' will comile the emulator and extra programs.
+'make all' will compile the emulator and extra programs.
 
 Run 'make clean' to delete binary files.
 
