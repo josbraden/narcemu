@@ -1,7 +1,7 @@
 /*
 @author Josh Braden
 
-File for main virtual machine handling funtctions
+File for main virtual machine handling functions
 Note on opcode extension bit:
 Currently no instructions are associated with opcodes 0x10..0x1f, so they act as NOOPS
 In the event of instruction extension, more case statements need to be added to execInstr()

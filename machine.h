@@ -24,7 +24,7 @@ Header file for the virtual machine.
 #define TDX 0xf
 //Structs
 struct narcVM {
-	//Emulator devies
+	//Emulator devices
 	int vmstatus;
 	int overflow;
 	//IO devices
