@@ -14,5 +14,10 @@ symtab.o: symtab.c
 narcasm.yy.o: narcasm.l
 	flex -o narcasm.yy.c narcasm.l
 	gcc -c -o narcasm.yy.o narcasm.yy.c
+# Temp target for this branch
+bigbison: narcasm.l narcasm.y
+	flex -o narcasm.yy.c narcasm.l
+	bison -d narcasm.y
+	gcc -o narcasm narcasm.tab.c narcasm.yy.c
 clean:
 	-rm -f narcasm main.o narcasm.o symtab.o narcasm.yy.o narcasm.yy.c

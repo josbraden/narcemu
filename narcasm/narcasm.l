@@ -1,9 +1,20 @@
 %{
-#include "narcasm.h"
+//#include "narcasm.h"
+#include "narcasm.tab.h"
 int instrKnt = 0;
 int varKnt = 0;
 int labelKnt = 0;
 int lineKnt = 0;
+#define DATA 101
+#define TEXT 102
+#define LABEL 103
+#define VAR 104
+#define LITERAL 105
+#define TYPE 106
+#define ZEROADDR 107
+#define ONEADDR 108
+#define INDEX 109
+#define WORD 110
 %}
 comment     "//".*|"#".*
 label		[a-zA-Z]+[0-9]*":"
