@@ -4,9 +4,7 @@
 #include <stdio.h>
 #include "narcasm.tab.h"
 %}
-%%
 comment     "//".*|"#".*
-label		[a-zA-Z]+[0-9]*":"
 var			[a-zA-Z]+[0-9]*
 literal		[0-9]+
 type		"word"
@@ -18,7 +16,7 @@ index		"LDX"|"STX"|"TIX"|"TDX"
 comment     {;} /* Consume comments too */
 ".data"		{return DATA;}
 ".text"		{return TEXT;}
-label		{return LABEL;}
+":"         {return COLON;}
 var			{return VAR;}
 literal		{return LITERAL;}
 type		{return TYPE;}
