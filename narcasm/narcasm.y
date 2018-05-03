@@ -14,6 +14,8 @@ void yyerror(const char* err);
 //Data
 struct symTab symbols;
 int mem;
+FILE* ifile;
+FILE* ofile;
 %}
 %token DATA
 %token TEXT
@@ -33,17 +35,37 @@ program		: DATA variables TEXT instructs
 variables	: /* no variables */
 			| variables variable
 			;
-variable	: TYPE VAR {installSym(symbols, yytext, VAR, 0);}
+variable	: TYPE VAR {mem++; installSym(symbols, yytext, VAR, 0);}
 			;
 instructs	: instruct
 			| instructs instruct
 			;
-instruct	: ZEROADDR /* write instruction binary */
-			| ONEADDR VAR /* write instruction+address */
-			| INDEX LITERAL VAR /* write instruction+index+value at address */
+instruct	: ZEROADDR {
+							mem++;
+							if (strcmp(yytext, "HLT") == 0) {
+								fwrite(0x0, 2, 1, ofile);
+							}
+							else if (strcmp(yytext, "SHL") == 0) {
+								fwrite(0xa, 2, 1, ofile);
+							}
+							else if (strcmp(yytext, "SHR") == 0) {
+								fwrite(0xb, 2, 1, ofile);
+							}
+							else if (strcmp(yytext, "RWD") == 0) {
+								fwrite(0x8, 2, 1, ofile);
+							}
+						}
+			| ONEADDR VAR {
+							mem++;
+
+						}
+			| INDEX LITERAL VAR {
+							mem++;
+
+						}
 			| label
 			;
-label		: VAR COLON {installSym(symbols, yytext, LABEL, 0);} /* todo replace '0' with address */
+label		: VAR COLON {installSym(symbols, yytext, LABEL, mem);}
 			;
 %%
 int main(int argc, char *argv[]) {
@@ -51,9 +73,8 @@ int main(int argc, char *argv[]) {
 	int i;
 	char input[4352];
     char output[4352];
-	FILE* ifile;
-	FILE* ofile;
 	//Init
+	mem = 0;
 	symbols = initSymTab(symbols);
 	strcpy(output, "a.out");
 	//Handle args
