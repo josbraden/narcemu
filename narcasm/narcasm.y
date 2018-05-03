@@ -15,6 +15,8 @@ void yyerror(const char* err);
 struct symTab symbols;
 char buff[16];
 int mem;
+unsigned short indexFlag;
+unsigned short instruction;
 FILE* ifile;
 FILE* ofile;
 %}
@@ -56,13 +58,54 @@ instruct	: ZEROADDR {
 								putc(0x8, ofile);
 							}
 						}
-			| ONEADDR VAR {
+			| ONEADDR {strcpy(buff, yytext);} VAR {
 							mem++;
-
+							if (lookupSym(symbols, yytext) != -1) {
+								if (strcmp(buff, "LDA") == 0) {
+									//do thing
+								}
+								else if (strcmp(buff, "STA") == 0) {
+									//do thing
+								}
+								else if (strcmp(buff, "ADD") == 0) {
+									//do thing
+								}
+								else if (strcmp(buff, "BRU") == 0) {
+									//do thing
+								}
+								else if (strcmp(buff, "BIN") == 0) {
+									//do thing
+								}
+								else if (strcmp(buff, "WWD") == 0) {
+									//do thing
+								}
+							}
+							else {
+								//yyerror symbol not found
+							}
 						}
-			| INDEX LITERAL VAR {
+			| INDEX {strcpy(buff, yytext);} LITERAL {indexFlag = atoi(yytext);} VAR {
 							mem++;
+							if (indexFlag > 3) {
+								//yyerror bad index register selection
+							}
+							else if (lookupSym(symbols, yytext) != -1) {
+								if (strcmp(buff, "LDX") == 0) {
 
+								}
+								else if (strcmp(buff, "STX") == 0) {
+
+								}
+								else if (strcmp(buff, "TIX") == 0) {
+
+								}
+								else if (strcmp(buff, "TDX") == 0) {
+
+								}
+							}
+							else {
+								//yyerror symbol not found
+							}
 						}
 			| label
 			;
