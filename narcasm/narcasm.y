@@ -44,16 +44,16 @@ instructs	: instruct
 instruct	: ZEROADDR {
 							mem++;
 							if (strcmp(yytext, "HLT") == 0) {
-								fwrite(0x0, 2, 1, ofile);
+								putc(0x0, ofile);
 							}
 							else if (strcmp(yytext, "SHL") == 0) {
-								fwrite(0xa, 2, 1, ofile);
+								putc(0xa, ofile);
 							}
 							else if (strcmp(yytext, "SHR") == 0) {
-								fwrite(0xb, 2, 1, ofile);
+								putc(0xb, ofile);
 							}
 							else if (strcmp(yytext, "RWD") == 0) {
-								fwrite(0x8, 2, 1, ofile);
+								putc(0x8, ofile);
 							}
 						}
 			| ONEADDR VAR {
