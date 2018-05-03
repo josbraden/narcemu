@@ -57,6 +57,9 @@ instruct	: ZEROADDR {
 							else if (strcmp(yytext, "RWD") == 0) {
 								putc(0x8, ofile);
 							}
+							else {
+								//yyerror bad instruction
+							}
 						}
 			| ONEADDR {strcpy(buff, yytext);} VAR {
 							mem++;
@@ -79,6 +82,9 @@ instruct	: ZEROADDR {
 								else if (strcmp(buff, "WWD") == 0) {
 									//do thing
 								}
+								else {
+									//yyerror bad instruction
+								}
 							}
 							else {
 								//yyerror symbol not found
@@ -91,16 +97,19 @@ instruct	: ZEROADDR {
 							}
 							else if (lookupSym(symbols, yytext) != -1) {
 								if (strcmp(buff, "LDX") == 0) {
-
+									//do thing
 								}
 								else if (strcmp(buff, "STX") == 0) {
-
+									//do thing
 								}
 								else if (strcmp(buff, "TIX") == 0) {
-
+									//do thing
 								}
 								else if (strcmp(buff, "TDX") == 0) {
-
+									//do thing
+								}
+								else {
+									//yyerror bad instruction
 								}
 							}
 							else {
@@ -166,6 +175,8 @@ int main(int argc, char *argv[]) {
 	yyparse();
 	//Free mem and exit
 	symbols = freeSymTab(symbols);
+	fclose(ifile);
+	fclose(ofile);
 	return 0;
 }
 void yyerror(const char* err) {
