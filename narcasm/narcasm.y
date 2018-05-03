@@ -13,6 +13,7 @@ extern char* yytext;
 void yyerror(const char* err);
 //Data
 struct symTab symbols;
+char buff[16];
 int mem;
 FILE* ifile;
 FILE* ofile;
@@ -65,7 +66,7 @@ instruct	: ZEROADDR {
 						}
 			| label
 			;
-label		: VAR COLON {installSym(symbols, yytext, LABEL, mem);}
+label		: VAR {strcpy(buff, yytext);} COLON {installSym(symbols, buff, LABEL, mem);}
 			;
 %%
 int main(int argc, char *argv[]) {
@@ -76,6 +77,7 @@ int main(int argc, char *argv[]) {
 	//Init
 	mem = 0;
 	symbols = initSymTab(symbols);
+	strcpy(buff, "");
 	strcpy(output, "a.out");
 	//Handle args
 	if (argc == 1) {
