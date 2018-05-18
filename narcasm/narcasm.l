@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "narcasm.tab.h"
 %}
-comment     "//".*|"#".*
+comment     "//"*|"#"*
 var			[a-zA-Z]+[0-9]*
 literal		[0-9]+
 type		"word"
