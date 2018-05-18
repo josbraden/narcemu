@@ -27,7 +27,10 @@ FILE* ofile;
 %token TYPE
 %token VAL
 %token VAR
-%token ZEROADDR
+%token HLT
+%token SHL
+%token SHR
+%token RWD
 %token ONEADDR
 %token INDEX
 %token LITERAL
@@ -43,24 +46,8 @@ variable	: TYPE VAR {mem++; installSym(symbols, yytext, VAR, 0);}
 instructs	: instruct
 			| instructs instruct
 			;
-instruct	: ZEROADDR {
-							mem++;
-							if (strcmp(yytext, "HLT") == 0) {
-								putc(0x0, ofile);
-							}
-							else if (strcmp(yytext, "SHL") == 0) {
-								putc(0xa, ofile);
-							}
-							else if (strcmp(yytext, "SHR") == 0) {
-								putc(0xb, ofile);
-							}
-							else if (strcmp(yytext, "RWD") == 0) {
-								putc(0x8, ofile);
-							}
-							else {
-								//yyerror bad instruction
-							}
-						}
+instruct	: zeroaddr
+			| oneaddr
 			| ONEADDR {strcpy(buff, yytext);} VAR {
 							mem++;
 							if (lookupSym(symbols, yytext) != -1) {
@@ -117,6 +104,13 @@ instruct	: ZEROADDR {
 							}
 						}
 			| label
+			;
+zeroaddr	: HLT {mem++; putc(0x0, ofile);}
+			| SHL {mem++; putc(0xa, ofile);}
+			| SHR {mem++; putc(0xb, ofile);}
+			| RWD {mem++; putc(0x8, ofile);}
+			;
+oneaddr		: 
 			;
 label		: VAR {strcpy(buff, yytext);} COLON {installSym(symbols, buff, LABEL, mem);}
 			;
