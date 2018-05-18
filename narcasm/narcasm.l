@@ -8,7 +8,6 @@ comment     "//"*|"#"*
 var			[a-zA-Z]+[0-9]*
 literal		[0-9]+
 type		"word"
-zeroAddr	"HLT"|"SHL"|"SHR"|"RWD"
 oneAddr		"LDA"|"STA"|"ADD"|"BRU"|"BIN"|"WWD"
 index		"LDX"|"STX"|"TIX"|"TDX"
 %%
@@ -20,6 +19,9 @@ comment     {;} /* Consume comments too */
 var			{return VAR;}
 literal		{return LITERAL;}
 type		{return TYPE;}
-zeroAddr	{return ZEROADDR;}
+"HLT"		{return HLT;}
+"SHL"		{return SHL;}
+"SHR"		{return SHR;}
+"RWD"		{return RWD;}
 oneAddr		{return ONEADDR;}
 index		{return INDEX;}
