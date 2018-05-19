@@ -31,8 +31,16 @@ FILE* ofile;
 %token SHL
 %token SHR
 %token RWD
-%token ONEADDR
-%token INDEX
+%token LDA
+%token STA
+%token ADD
+%token BRU
+%token BIN
+%token WWD
+%token LDX
+%token STX
+%token TIX
+%token TDX
 %token LITERAL
 %start program
 %%
@@ -48,61 +56,7 @@ instructs	: instruct
 			;
 instruct	: zeroaddr
 			| oneaddr
-			| ONEADDR {strcpy(buff, yytext);} VAR {
-							mem++;
-							if (lookupSym(symbols, yytext) != -1) {
-								if (strcmp(buff, "LDA") == 0) {
-									//do thing
-								}
-								else if (strcmp(buff, "STA") == 0) {
-									//do thing
-								}
-								else if (strcmp(buff, "ADD") == 0) {
-									//do thing
-								}
-								else if (strcmp(buff, "BRU") == 0) {
-									//do thing
-								}
-								else if (strcmp(buff, "BIN") == 0) {
-									//do thing
-								}
-								else if (strcmp(buff, "WWD") == 0) {
-									//do thing
-								}
-								else {
-									//yyerror bad instruction
-								}
-							}
-							else {
-								//yyerror symbol not found
-							}
-						}
-			| INDEX {strcpy(buff, yytext);} LITERAL {indexFlag = atoi(yytext);} VAR {
-							mem++;
-							if (indexFlag > 3) {
-								//yyerror bad index register selection
-							}
-							else if (lookupSym(symbols, yytext) != -1) {
-								if (strcmp(buff, "LDX") == 0) {
-									//do thing
-								}
-								else if (strcmp(buff, "STX") == 0) {
-									//do thing
-								}
-								else if (strcmp(buff, "TIX") == 0) {
-									//do thing
-								}
-								else if (strcmp(buff, "TDX") == 0) {
-									//do thing
-								}
-								else {
-									//yyerror bad instruction
-								}
-							}
-							else {
-								//yyerror symbol not found
-							}
-						}
+			| index
 			| label
 			;
 zeroaddr	: HLT {mem++; putc(0x0, ofile);}
@@ -110,7 +64,17 @@ zeroaddr	: HLT {mem++; putc(0x0, ofile);}
 			| SHR {mem++; putc(0xb, ofile);}
 			| RWD {mem++; putc(0x8, ofile);}
 			;
-oneaddr		: 
+oneaddr		: LDA {mem++; /* placeholder */}
+			| STA {mem++; /* placeholder */}
+			| ADD {mem++; /* placeholder */}
+			| BRU {mem++; /* placeholder */}
+			| BIN {mem++; /* placeholder */}
+			| WWD {mem++; /* placeholder */}
+			;
+index		: LDX {mem++; /* placeholder */}
+			| STX {mem++; /* placeholder */}
+			| TIX {mem++; /* placeholder */}
+			| TDX {mem++; /* placeholder */}
 			;
 label		: VAR {strcpy(buff, yytext);} COLON {installSym(symbols, buff, LABEL, mem);}
 			;
