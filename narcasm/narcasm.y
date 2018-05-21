@@ -24,6 +24,7 @@ FILE* ofile;
 %token TEXT
 %token LABEL
 %token COLON
+%token LITERAL
 %token TYPE
 %token VAL
 %token VAR
@@ -63,13 +64,13 @@ zeroaddr	: HLT {mem++; putc(0x0, ofile);}
 			| SHL {mem++; putc(0xa, ofile);}
 			| SHR {mem++; putc(0xb, ofile);}
 			| RWD {mem++; putc(0x8, ofile);}
+			| WWD {mem++; putc(0x9, ofile);}
 			;
-oneaddr		: LDA {mem++; /* placeholder */}
-			| STA {mem++; /* placeholder */}
-			| ADD {mem++; /* placeholder */}
-			| BRU {mem++; /* placeholder */}
-			| BIN {mem++; /* placeholder */}
-			| WWD {mem++; /* placeholder */}
+oneaddr		: LDA operand {mem++; /* placeholder */}
+			| STA VAR {mem++; /* placeholder */}
+			| ADD operand {mem++; /* placeholder */}
+			| BRU operand {mem++; /* placeholder */}
+			| BIN operand {mem++; /* placeholder */}
 			;
 index		: LDX {mem++; /* placeholder */}
 			| STX {mem++; /* placeholder */}
@@ -77,6 +78,9 @@ index		: LDX {mem++; /* placeholder */}
 			| TDX {mem++; /* placeholder */}
 			;
 label		: VAR {strcpy(buff, yytext);} COLON {installSym(symbols, buff, LABEL, mem);}
+			;
+operand		: VAR
+			| LITERAL
 			;
 %%
 int main(int argc, char *argv[]) {
