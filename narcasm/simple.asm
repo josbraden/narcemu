@@ -1,5 +1,3 @@
 .data
 .text
-RWD
-WWD
-HLT
+LDA 1

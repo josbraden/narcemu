@@ -16,8 +16,7 @@ void yyerror(const char* err);
 struct symTab symbols;
 char buff[16];
 int mem;
-unsigned short indexFlag;
-unsigned short instruction;
+unsigned short instruction, address, indexFlag;
 FILE* ifile;
 FILE* ofile;
 %}
@@ -66,21 +65,21 @@ zeroaddr	: HLT {mem++; instruction = encodeInstr(0x0, 0, 0, 0, 0); fwrite(&instr
 			| RWD {mem++; instruction = encodeInstr(0x8, 0, 0, 0, 0); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
 			| WWD {mem++; instruction = encodeInstr(0x9, 0, 0, 0, 0); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
 			;
-oneaddr		: LDA operand {mem++; /* placeholder */}
-			| STA VAR {mem++; /* placeholder */}
-			| ADD operand {mem++; /* placeholder */}
-			| BRU operand {mem++; /* placeholder */}
-			| BIN operand {mem++; /* placeholder */}
+oneaddr		: LDA operand {mem++; instruction = encodeInstr(0x1, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
+			| STA operand {mem++; instruction = encodeInstr(0x2, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
+			| ADD operand {mem++; instruction = encodeInstr(0x3, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
+			| BRU operand {mem++; instruction = encodeInstr(0x5, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
+			| BIN operand {mem++; instruction = encodeInstr(0x7, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
 			;
-index		: LDX LITERAL operand {mem++; /* placeholder */}
-			| STX LITERAL operand {mem++; /* placeholder */}
-			| TIX LITERAL operand {mem++; /* placeholder */}
-			| TDX LITERAL operand {mem++; /* placeholder */}
+index		: LDX LITERAL {indexFlag = atoi(yytext);} operand {mem++; instruction = encodeInstr(0xc, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
+			| STX LITERAL {indexFlag = atoi(yytext);} operand {mem++; instruction = encodeInstr(0xd, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
+			| TIX LITERAL {indexFlag = atoi(yytext);} operand {mem++; instruction = encodeInstr(0xe, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
+			| TDX LITERAL {indexFlag = atoi(yytext);} operand {mem++; instruction = encodeInstr(0xf, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
 			;
 label		: VAR {strcpy(buff, yytext);} COLON {installSym(symbols, buff, LABEL, mem);}
 			;
-operand		: VAR
-			| LITERAL
+operand		: VAR {if (lookupSym(symbols, yytext) == -1) {yyerror(yytext);} else {address = lookupSym(symbols, yytext);}}
+			| LITERAL {address = atoi(yytext);}
 			;
 %%
 int main(int argc, char *argv[]) {
