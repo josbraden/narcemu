@@ -60,11 +60,11 @@ instruct	: zeroaddr
 			| index
 			| label
 			;
-zeroaddr	: HLT {mem++; putc(encodeInstr(0x0, 0, 0, 0, 0), ofile);}
-			| SHL {mem++; putc(encodeInstr(0xa, 0, 0, 0, 0), ofile);}
-			| SHR {mem++; putc(encodeInstr(0xb, 0, 0, 0, 0), ofile);}
-			| RWD {mem++; putc(encodeInstr(0x8, 0, 0, 0, 0), ofile);}
-			| WWD {mem++; putc(encodeInstr(0x9, 0, 0, 0, 0), ofile);}
+zeroaddr	: HLT {mem++; instruction = encodeInstr(0x0, 0, 0, 0, 0); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
+			| SHL {mem++; instruction = encodeInstr(0xa, 0, 0, 0, 0); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
+			| SHR {mem++; instruction = encodeInstr(0xb, 0, 0, 0, 0); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
+			| RWD {mem++; instruction = encodeInstr(0x8, 0, 0, 0, 0); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
+			| WWD {mem++; instruction = encodeInstr(0x9, 0, 0, 0, 0); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
 			;
 oneaddr		: LDA operand {mem++; /* placeholder */}
 			| STA VAR {mem++; /* placeholder */}
