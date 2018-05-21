@@ -37,6 +37,7 @@ FILE* ofile;
 %token ADD
 %token TCA
 %token BRU
+%token BIP
 %token BIN
 %token WWD
 %token LDX
@@ -71,6 +72,7 @@ oneaddr		: LDA operand {mem++; instruction = encodeInstr(0x1, 0, 0, 0, address);
 			| STA operand {mem++; instruction = encodeInstr(0x2, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
 			| ADD operand {mem++; instruction = encodeInstr(0x3, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
 			| BRU operand {mem++; instruction = encodeInstr(0x5, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
+			| BIP operand {mem++; instruction = encodeInstr(0x6, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
 			| BIN operand {mem++; instruction = encodeInstr(0x7, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
 			;
 index		: LDX LITERAL {indexFlag = atoi(yytext);} operand {mem++; instruction = encodeInstr(0xc, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}

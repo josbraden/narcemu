@@ -26,6 +26,7 @@ type		{return TYPE;}
 "ADD"		{return ADD;}
 "TCA"       {return TCA;}
 "BRU"		{return BRU;}
+"BIP"       {return BIP;}
 "BIN"		{return BIN;}
 "WWD"		{return WWD;}
 "LDX"		{return LDX;}
