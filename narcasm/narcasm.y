@@ -60,11 +60,11 @@ instruct	: zeroaddr
 			| index
 			| label
 			;
-zeroaddr	: HLT {mem++; putc(0x0, ofile);}
-			| SHL {mem++; putc(0xa, ofile);}
-			| SHR {mem++; putc(0xb, ofile);}
-			| RWD {mem++; putc(0x8, ofile);}
-			| WWD {mem++; putc(0x9, ofile);}
+zeroaddr	: HLT {mem++; putc(encodeInstr(0x0, 0, 0, 0, 0), ofile);}
+			| SHL {mem++; putc(encodeInstr(0xa, 0, 0, 0, 0), ofile);}
+			| SHR {mem++; putc(encodeInstr(0xb, 0, 0, 0, 0), ofile);}
+			| RWD {mem++; putc(encodeInstr(0x8, 0, 0, 0, 0), ofile);}
+			| WWD {mem++; putc(encodeInstr(0x9, 0, 0, 0, 0), ofile);}
 			;
 oneaddr		: LDA operand {mem++; /* placeholder */}
 			| STA VAR {mem++; /* placeholder */}
