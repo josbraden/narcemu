@@ -42,7 +42,6 @@ FILE* ofile;
 %token STX
 %token TIX
 %token TDX
-%token LITERAL
 %start program
 %%
 program		: DATA variables TEXT instructs
@@ -72,10 +71,10 @@ oneaddr		: LDA operand {mem++; /* placeholder */}
 			| BRU operand {mem++; /* placeholder */}
 			| BIN operand {mem++; /* placeholder */}
 			;
-index		: LDX {mem++; /* placeholder */}
-			| STX {mem++; /* placeholder */}
-			| TIX {mem++; /* placeholder */}
-			| TDX {mem++; /* placeholder */}
+index		: LDX LITERAL operand {mem++; /* placeholder */}
+			| STX LITERAL operand {mem++; /* placeholder */}
+			| TIX LITERAL operand {mem++; /* placeholder */}
+			| TDX LITERAL operand {mem++; /* placeholder */}
 			;
 label		: VAR {strcpy(buff, yytext);} COLON {installSym(symbols, buff, LABEL, mem);}
 			;
