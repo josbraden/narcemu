@@ -22,5 +22,7 @@ unsigned short encodeInstr(unsigned short opcode, unsigned short extension, unsi
 		instruction = instruction & 0x300;
 	}
 	instruction += address;
+	//Final byteswap for big-endian system
+	instruction = (instruction >> 8) | (instruction << 8);
 	return instruction;
 }
