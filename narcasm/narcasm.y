@@ -35,6 +35,7 @@ FILE* ofile;
 %token LDA
 %token STA
 %token ADD
+%token TCA
 %token BRU
 %token BIN
 %token WWD
@@ -60,6 +61,7 @@ instruct	: zeroaddr
 			| label
 			;
 zeroaddr	: HLT {mem++; instruction = encodeInstr(0x0, 0, 0, 0, 0); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
+			| TCA {mem++; instruction = encodeInstr(0x4, 0, 0, 0, 0); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
 			| SHL {mem++; instruction = encodeInstr(0xa, 0, 0, 0, 0); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
 			| SHR {mem++; instruction = encodeInstr(0xb, 0, 0, 0, 0); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
 			| RWD {mem++; instruction = encodeInstr(0x8, 0, 0, 0, 0); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}

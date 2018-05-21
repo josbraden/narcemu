@@ -24,6 +24,7 @@ type		{return TYPE;}
 "LDA"		{return LDA;}
 "STA"		{return STA;}
 "ADD"		{return ADD;}
+"TCA"       {return TCA;}
 "BRU"		{return BRU;}
 "BIN"		{return BIN;}
 "WWD"		{return WWD;}
