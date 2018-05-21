@@ -1,7 +1,9 @@
-narcasm: symtab.o narcasm.yy.o narcasm.tab.o
-	gcc -static -o narcasm symtab.o narcasm.yy.o narcasm.tab.o
+narcasm: symtab.o encode.o narcasm.yy.o narcasm.tab.o
+	gcc -static -o narcasm symtab.o encode.o narcasm.yy.o narcasm.tab.o
 symtab.o: symtab.c
 	gcc -Wall -c -o symtab.o symtab.c
+encode.o: encode.c
+	gcc -Wall -c -o encode.o encode.c
 narcasm.tab.h: narcasm.y
 	bison -d narcasm.y
 narcasm.tab.c: narcasm.y

@@ -1,6 +1,7 @@
 %{
 //Inclusions
 #include "symtab.h"
+#include "encode.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
