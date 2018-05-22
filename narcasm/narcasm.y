@@ -75,10 +75,10 @@ oneaddr		: LDA operand {mem++; instruction = encodeInstr(0x1, 0, 0, 0, address);
 			| BIP operand {mem++; instruction = encodeInstr(0x6, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
 			| BIN operand {mem++; instruction = encodeInstr(0x7, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
 			;
-index		: LDX LITERAL {indexFlag = atoi(yytext);} operand {mem++; instruction = encodeInstr(0xc, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
-			| STX LITERAL {indexFlag = atoi(yytext);} operand {mem++; instruction = encodeInstr(0xd, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
-			| TIX LITERAL {indexFlag = atoi(yytext);} operand {mem++; instruction = encodeInstr(0xe, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
-			| TDX LITERAL {indexFlag = atoi(yytext);} operand {mem++; instruction = encodeInstr(0xf, 0, 0, 0, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
+index		: LDX LITERAL {indexFlag = atoi(yytext);} operand {mem++; instruction = encodeInstr(0xc, 0, 0, indexFlag, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
+			| STX LITERAL {indexFlag = atoi(yytext);} operand {mem++; instruction = encodeInstr(0xd, 0, 0, indexFlag, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
+			| TIX LITERAL {indexFlag = atoi(yytext);} operand {mem++; instruction = encodeInstr(0xe, 0, 0, indexFlag, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
+			| TDX LITERAL {indexFlag = atoi(yytext);} operand {mem++; instruction = encodeInstr(0xf, 0, 0, indexFlag, address); fwrite(&instruction, 1, sizeof(unsigned short), ofile);}
 			;
 label		: VAR {strcpy(buff, yytext);} COLON {installSym(symbols, buff, LABEL, mem);}
 			;
