@@ -1,4 +1,6 @@
-//Header file, used only for function declaration
+//Header file
+#define BREAKDOWN	100
+#define ASSEMBLY	101
 //openfile.c
 void openfile(char *filename);
 //displaynum.c
